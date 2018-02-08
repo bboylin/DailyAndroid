@@ -17,8 +17,7 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="TitleTextAppearance"
-        parent="TextAppearance.AppCompat">
+    <style name="TitleTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textColor">@color/textColorTitle</item>
     </style>
@@ -34,5 +33,16 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@drawable/btn_bottom_text_selector</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="MultiStatusView" />
+
+    <style name="MultiStatusView.Content">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:textColor">#a9b7b7</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

@@ -12,8 +12,8 @@ import android.view.View
  * Created by lin on 2018/2/6.
  */
 class SimpleItemDecoration : ItemDecoration() {
-    val paint = Paint()
-    var margin = 0
+    private val paint = Paint()
+    private var margin = 0
 
     fun SimpleItemDecoration() {}
 
