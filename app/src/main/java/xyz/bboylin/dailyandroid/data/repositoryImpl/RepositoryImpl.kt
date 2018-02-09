@@ -17,7 +17,7 @@ class RepositoryImpl : IRepository {
 
     override fun getGankByPage(page: Int): Observable<GankHomeResponse> {
         val service = RetrofitFactory.GANK_SERVICE
-        return service.getAndroidData(20, page)
+        return service.getAndroidData(10, page)
     }
 
     companion object {

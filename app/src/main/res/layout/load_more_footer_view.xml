@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:text="加载中..."
+            android:text="@string/loading_view_hint"
             android:textColor="#0dddb8"
             android:textSize="14sp" />
     </LinearLayout>
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="加载失败"
+            android:text="加载失败了，点我再试试？"
             android:textColor="#0dddb8" />
 
     </FrameLayout>

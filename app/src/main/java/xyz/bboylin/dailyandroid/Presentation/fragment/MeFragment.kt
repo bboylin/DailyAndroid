@@ -14,7 +14,7 @@ class MeFragment : BaseFragment() {
     }
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_content
+        return R.layout.fragment_me
     }
 
     companion object {

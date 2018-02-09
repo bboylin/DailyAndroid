@@ -13,6 +13,7 @@ import xyz.bboylin.dailyandroid.data.entity.GankHomeItem
 import xyz.bboylin.dailyandroid.data.entity.WanHomeItem
 
 /**
+ * 首页的adapter，负责加载更多
  * Created by lin on 2018/2/7.
  */
 class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<HomeAdapter.VH>() {
@@ -20,8 +21,8 @@ class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<Home
     private val TYPE_FOOTER = 2
     private var onLoadMoreListener: OnLoadMoreListener? = null
     private var loading = false
-    private val footElem = Any()
-    private val tag = "HomeAdapter"
+    private val footerElem = Any()
+    private var footerView: View? = null
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bindItem(items[position])
@@ -30,13 +31,18 @@ class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<Home
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH {
         val view = LayoutInflater.from(parent?.context).inflate(
                 if (viewType == TYPE_NORMAL) R.layout.home_item else R.layout.load_more_footer_view, parent, false)
+        if (viewType == TYPE_FOOTER) {
+            view.findViewById<View>(R.id.load_more_loading_view).visibility = View.VISIBLE
+            view.findViewById<View>(R.id.load_more_failed_view).visibility = View.GONE
+            footerView = view
+        }
         return VH(view)
     }
 
     override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int = when (position) {
-        itemCount - 1 -> if (items[position].equals(footElem)) TYPE_FOOTER else TYPE_NORMAL
+        itemCount - 1 -> if (items[position].equals(footerElem)) TYPE_FOOTER else TYPE_NORMAL
         else -> TYPE_NORMAL
     }
 
@@ -58,7 +64,7 @@ class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<Home
     }
 
     private fun startLoadMore(context: Context?) {
-        items.add(footElem)
+        items.add(footerElem)
         notifyItemInserted(itemCount - 1)
         loading = true
         onLoadMoreListener?.loadMore()
@@ -71,15 +77,31 @@ class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<Home
             return RecyclerView.NO_POSITION
     }
 
-    fun addData(list: List<Any>?) {
-        if (items.remove(footElem)) {
+    fun addData(list: List<Any>) {
+        footerView = null
+        if (items.remove(footerElem)) {
             notifyItemRemoved(itemCount)
         }
-        for (item in list!!) {
+        for (item in list) {
             items.add(item)
         }
         loading = false
         notifyItemRangeInserted(itemCount - list.size, list.size)
+    }
+
+    fun refreshData(list: List<Any>) {
+        items.clear()
+        for (item in list) {
+            items.add(item)
+        }
+        notifyDataSetChanged()
+    }
+
+    fun showError() {
+        val loadMoreFailedView = footerView?.findViewById<View>(R.id.load_more_failed_view)
+        loadMoreFailedView?.visibility = View.VISIBLE
+        loadMoreFailedView?.setOnClickListener { v -> onLoadMoreListener?.loadMore() }
+        footerView?.findViewById<View>(R.id.load_more_loading_view)?.visibility = View.GONE
     }
 
     fun setOnLoadMoreListener(onLoadMoreListener: OnLoadMoreListener) {
