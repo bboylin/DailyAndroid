@@ -39,6 +39,7 @@ class HomeFragment : BaseFragment() {
                     page++
                     multiStatusView.showContent()
                 }, { throwable ->
+                    LogUtil.e(TAG, "load data error", throwable)
                     if (firstTime) {
                         multiStatusView.showError()
                     } else {

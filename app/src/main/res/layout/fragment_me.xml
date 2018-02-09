@@ -2,6 +2,124 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/avatar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="登录"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_username"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_view_homepage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="没有账号？立即注册"
+        android:textColor="@color/color_gray"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_collection"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawablePadding="7dp"
+                android:drawableStart="@drawable/ic_heart_outline_grey600_18dp"
+                android:gravity="center"
+                android:text="收藏" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/color_gray" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:drawablePadding="7dp"
+                android:drawableStart="@drawable/ic_history_grey600_18dp"
+                android:gravity="center"
+                android:text="历史" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/color_gray" />
+
+    <TextView
+        android:id="@+id/tv_post"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center|center_horizontal"
+        android:text="提交干货"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_mine_message"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center|center_horizontal"
+        android:text="清空缓存"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_change_skin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center|center_horizontal"
+        android:text="夜间模式"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center|center_horizontal"
+        android:text="意见反馈"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_about"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center|center_horizontal"
+        android:text="关于"
+        android:textSize="14sp" />
 </LinearLayout>
