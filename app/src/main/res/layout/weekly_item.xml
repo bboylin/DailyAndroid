@@ -5,19 +5,21 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/TitleTextAppearance"
+        style="@style/WeeklyTitleTextAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
         android:layout_marginTop="6dp"
         android:ellipsize="end"
-        android:maxLines="3" />
+        android:maxLines="3"
+        android:paddingLeft="20dp" />
 
     <ImageView
         android:id="@+id/btn_star"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentEnd="true"
-        android:layout_margin="4dp"
+        android:layout_margin="6dp"
         android:src="@drawable/collect_black" />
 
 </RelativeLayout>

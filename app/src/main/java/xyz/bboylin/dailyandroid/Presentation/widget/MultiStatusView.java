@@ -97,6 +97,15 @@ public class MultiStatusView extends RelativeLayout {
      */
     public void setOnRetryClickListener(View.OnClickListener onRetryClickListener) {
         this.mOnRetryClickListener = onRetryClickListener;
+        if (mEmptyView != null) {
+            mEmptyView.setOnClickListener(onRetryClickListener);
+        }
+        if (mErrorView != null) {
+            mErrorView.setOnClickListener(onRetryClickListener);
+        }
+        if (mNoNetworkView != null) {
+            mNoNetworkView.setOnClickListener(onRetryClickListener);
+        }
     }
 
     /**

@@ -49,6 +49,15 @@ class HomeFragment : BaseFragment() {
     }
 
     override fun initView() {
+        multiStatusView.setOnRetryClickListener {
+            if (NetworkUtil.networkConnected(activity as Context)) {
+                multiStatusView.showLoading()
+                loadData(true)
+            } else {
+                UniversalToast.makeText(activity as Context, "请检查网络连接"
+                        , UniversalToast.LENGTH_SHORT).showWarning()
+            }
+        }
         refreshLayout.setColorSchemeColors(Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED)
         refreshLayout.setDistanceToTriggerSync(300)
         refreshLayout.setProgressBackgroundColorSchemeColor(Color.WHITE)

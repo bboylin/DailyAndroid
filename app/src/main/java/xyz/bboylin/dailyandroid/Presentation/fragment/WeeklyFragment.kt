@@ -10,9 +10,11 @@ import xyz.bboylin.dailyandroid.Presentation.widget.SimpleItemDecoration
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.util.NetworkUtil
+import xyz.bboylin.universialtoast.UniversalToast
 import kotlin.concurrent.thread
 
 /**
+ * todo 现在这个页面太丑了，要换成卡片列表，辅以图片。或者用类似首页的列表。
  * Created by lin on 2018/2/5.
  */
 class WeeklyFragment : BaseFragment() {
@@ -50,8 +52,13 @@ class WeeklyFragment : BaseFragment() {
 
     override fun initView() {
         multiStatusView.setOnRetryClickListener {
-            multiStatusView.showLoading()
-            loadData()
+            if (NetworkUtil.networkConnected(activity as Context)) {
+                multiStatusView.showLoading()
+                loadData()
+            } else {
+                UniversalToast.makeText(activity as Context, "请检查网络连接"
+                        , UniversalToast.LENGTH_SHORT).showWarning()
+            }
         }
         val linearLayoutManager = LinearLayoutManager(activity as Context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL

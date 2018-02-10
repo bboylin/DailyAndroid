@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_size_title">15sp</dimen>
+    <dimen name="weekly_text_size_title">18sp</dimen>
     <dimen name="text_size_username">20sp</dimen>
 </resources>
