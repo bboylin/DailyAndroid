@@ -1,4 +1,4 @@
-package xyz.bboylin.dailyandroid.Presentation.widget
+package xyz.bboylin.dailyandroid.presentation.widget
 
 import android.graphics.Canvas
 import android.graphics.Paint

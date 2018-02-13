@@ -1,4 +1,4 @@
-package xyz.bboylin.dailyandroid.Presentation
+package xyz.bboylin.dailyandroid.presentation
 
 /**
  * Created by lin on 2018/2/8.

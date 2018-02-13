@@ -1,15 +1,15 @@
-package xyz.bboylin.dailyandroid.Presentation.fragment
+package xyz.bboylin.dailyandroid.presentation.fragment
 
 import android.content.Context
 import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_weekly.*
 import org.jsoup.Jsoup
-import xyz.bboylin.dailyandroid.Presentation.adapter.WeeklyAdapter
-import xyz.bboylin.dailyandroid.Presentation.widget.SimpleItemDecoration
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.util.NetworkUtil
+import xyz.bboylin.dailyandroid.presentation.adapter.WeeklyAdapter
+import xyz.bboylin.dailyandroid.presentation.widget.SimpleItemDecoration
 import xyz.bboylin.universialtoast.UniversalToast
 import kotlin.concurrent.thread
 

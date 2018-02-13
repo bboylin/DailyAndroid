@@ -1,4 +1,4 @@
-package xyz.bboylin.dailyandroid.helper.retrofit
+package xyz.bboylin.dailyandroid.data.remote
 
 import io.reactivex.Observable
 import retrofit2.http.GET

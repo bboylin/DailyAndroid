@@ -2,7 +2,6 @@ package xyz.bboylin.dailyandroid.domain.interator
 
 import io.reactivex.Observable
 import xyz.bboylin.dailyandroid.data.entity.GankHomeResponse
-import xyz.bboylin.dailyandroid.data.repositoryImpl.RepositoryImpl
 import xyz.bboylin.dailyandroid.domain.Usecase
 
 /**

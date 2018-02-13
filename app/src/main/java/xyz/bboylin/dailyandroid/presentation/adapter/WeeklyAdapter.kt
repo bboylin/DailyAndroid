@@ -1,4 +1,4 @@
-package xyz.bboylin.dailyandroid.Presentation.adapter
+package xyz.bboylin.dailyandroid.presentation.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

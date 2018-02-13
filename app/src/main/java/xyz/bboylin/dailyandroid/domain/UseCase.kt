@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import xyz.bboylin.dailyandroid.data.repositoryImpl.RepositoryImpl
+import xyz.bboylin.dailyandroid.data.RepositoryImpl
 
 /**
  * Created by lin on 2018/2/6.

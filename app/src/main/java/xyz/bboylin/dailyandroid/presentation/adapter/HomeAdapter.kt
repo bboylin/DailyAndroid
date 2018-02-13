@@ -1,4 +1,4 @@
-package xyz.bboylin.dailyandroid.Presentation.adapter
+package xyz.bboylin.dailyandroid.presentation.adapter
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.home_item.view.*
-import xyz.bboylin.dailyandroid.Presentation.OnLoadMoreListener
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.data.entity.GankHomeItem
 import xyz.bboylin.dailyandroid.data.entity.WanHomeItem
+import xyz.bboylin.dailyandroid.presentation.OnLoadMoreListener
 
 /**
  * 首页的adapter，负责加载更多
@@ -89,7 +89,10 @@ class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<Home
         notifyItemRangeInserted(itemCount - list.size, list.size)
     }
 
-    fun refreshData(list: List<Any>) {
+    fun refreshData(list: ArrayList<Any>) {
+        if (items.containsAll(list)) {
+            return
+        }
         items.clear()
         for (item in list) {
             items.add(item)

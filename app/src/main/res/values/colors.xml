@@ -10,4 +10,5 @@
     <color name="color_title_bg">#CCFFFFFF</color>
     <color name="textColorTitle">#25acc4</color>
     <color name="colorWhite">#FFFFFFFF</color>
+    <color name="colorPopup">#fdf1dd09</color>
 </resources>

@@ -1,4 +1,4 @@
-package xyz.bboylin.dailyandroid.Presentation.activity
+package xyz.bboylin.dailyandroid.presentation.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

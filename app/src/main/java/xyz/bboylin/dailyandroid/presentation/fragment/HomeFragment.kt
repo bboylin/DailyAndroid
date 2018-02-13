@@ -1,18 +1,21 @@
-package xyz.bboylin.dailyandroid.Presentation.fragment
+package xyz.bboylin.dailyandroid.presentation.fragment
 
 import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.LinearLayoutManager
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.fragment_home.*
-import xyz.bboylin.dailyandroid.Presentation.OnLoadMoreListener
-import xyz.bboylin.dailyandroid.Presentation.adapter.HomeAdapter
-import xyz.bboylin.dailyandroid.Presentation.widget.SimpleItemDecoration
 import xyz.bboylin.dailyandroid.R
+import xyz.bboylin.dailyandroid.data.entity.GankHomeItem
+import xyz.bboylin.dailyandroid.data.entity.WanHomeItem
 import xyz.bboylin.dailyandroid.domain.interator.GankHomeInterator
 import xyz.bboylin.dailyandroid.domain.interator.WanHomeInterator
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.helper.util.NetworkUtil
+import xyz.bboylin.dailyandroid.presentation.OnLoadMoreListener
+import xyz.bboylin.dailyandroid.presentation.adapter.HomeAdapter
+import xyz.bboylin.dailyandroid.presentation.widget.SimpleItemDecoration
 import xyz.bboylin.universialtoast.UniversalToast
 
 /**
@@ -32,7 +35,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun loadData(firstTime: Boolean) {
-        Observable.concat(WanHomeInterator(page).execute().map { response -> response.data!!.datas }
+        Observable.mergeDelayError(WanHomeInterator(page).execute().map { response -> response.data!!.datas }
                 , GankHomeInterator(page + 1).execute().map { response -> response.gankList })
                 .subscribe({ list ->
                     (recyclerView.adapter as HomeAdapter).addData(list!!)
@@ -86,8 +89,20 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun refreshData() {
-        Observable.concat(WanHomeInterator(0).execute().map { response -> response.data!!.datas }
-                , GankHomeInterator(1).execute().map { response -> response.gankList })
+        Observable.zip(WanHomeInterator(0).execute().map { response -> response.data!!.datas }
+                , GankHomeInterator(1).execute().map { response -> response.gankList }
+                , object : BiFunction<List<WanHomeItem>?, List<GankHomeItem>?, ArrayList<Any>> {
+            override fun apply(t1: List<WanHomeItem>, t2: List<GankHomeItem>): ArrayList<Any> {
+                val list = ArrayList<Any>()
+                for (item in t1) {
+                    list.add(item)
+                }
+                for (item in t2) {
+                    list.add(item)
+                }
+                return list
+            }
+        })
                 .subscribe({ list ->
                     (recyclerView.adapter as HomeAdapter).refreshData(list!!)
                     UniversalToast.makeText(activity as Context, "刷新成功", UniversalToast.LENGTH_SHORT)

@@ -1,4 +1,4 @@
-package xyz.bboylin.dailyandroid.Presentation.fragment
+package xyz.bboylin.dailyandroid.presentation.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,8 +10,10 @@ import android.view.ViewGroup
  * Created by lin on 2018/2/5.
  */
 abstract class BaseFragment : Fragment() {
+    protected var contentView: View? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(getLayoutId(), container, false)
+        contentView = inflater?.inflate(getLayoutId(), container, false)
+        return contentView
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

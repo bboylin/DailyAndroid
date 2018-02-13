@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <xyz.bboylin.dailyandroid.Presentation.widget.MultiStatusView
+    <xyz.bboylin.dailyandroid.presentation.widget.MultiStatusView
         android:id="@+id/multiStatusView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,5 +20,5 @@
             android:layout_height="match_parent"
             android:paddingLeft="8dp"
             android:paddingRight="8dp" />
-    </xyz.bboylin.dailyandroid.Presentation.widget.MultiStatusView>
+    </xyz.bboylin.dailyandroid.presentation.widget.MultiStatusView>
 </LinearLayout>

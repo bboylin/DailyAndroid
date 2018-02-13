@@ -1,13 +1,13 @@
-package xyz.bboylin.dailyandroid.Presentation.activity
+package xyz.bboylin.dailyandroid.presentation.activity
 
 import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
 import android.view.Gravity
 import android.widget.RadioGroup
 import kotlinx.android.synthetic.main.bottom_bar.*
-import xyz.bboylin.dailyandroid.Presentation.fragment.HomeFragment
-import xyz.bboylin.dailyandroid.Presentation.fragment.MeFragment
-import xyz.bboylin.dailyandroid.Presentation.fragment.WeeklyFragment
+import xyz.bboylin.dailyandroid.presentation.fragment.HomeFragment
+import xyz.bboylin.dailyandroid.presentation.fragment.MeFragment
+import xyz.bboylin.dailyandroid.presentation.fragment.WeeklyFragment
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.universialtoast.UniversalToast
 
