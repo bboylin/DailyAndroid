@@ -1,11 +1,15 @@
 package xyz.bboylin.dailyandroid.presentation.widget
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Point
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -19,7 +23,6 @@ import xyz.bboylin.universialtoast.UniversalToast
 
 /**
  * todo 背景配色太丑了，改改。
- * todo 键盘挡住button了，改。
  * Created by lin on 2018/2/11.
  */
 object LoginPopupWindow {
@@ -41,11 +44,9 @@ object LoginPopupWindow {
         popupWindow.setAnimationStyle(R.style.PopupWindow)
         //设置位置
         popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0)
-        //设置消失监听
-        popupWindow.setOnDismissListener(PopupWindow.OnDismissListener { setBackgroundAlpha(context, 1f) })
         //设置PopupWindow的View点击事件
-        val usernameTv = view.findViewById<TextView>(R.id.accountTv)
-        val passwordTv = view.findViewById<TextView>(R.id.passwordTv)
+        val usernameTv = view.findViewById<EditText>(R.id.accountTv)
+        val passwordTv = view.findViewById<EditText>(R.id.passwordTv)
         val registerTv = view.findViewById<TextView>(R.id.registerTv)
         val loginTv = view.findViewById<TextView>(R.id.loginTv)
         registerTv.setOnClickListener {
@@ -91,6 +92,14 @@ object LoginPopupWindow {
         }
         //设置背景色
         setBackgroundAlpha(context, 0.5f)
+        //设置消失监听
+        popupWindow.setOnDismissListener(PopupWindow.OnDismissListener {
+            //hide keyboard
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            context.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            imm.hideSoftInputFromWindow(usernameTv.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            setBackgroundAlpha(context, 1f)
+        })
     }
 
     //设置屏幕背景透明效果
