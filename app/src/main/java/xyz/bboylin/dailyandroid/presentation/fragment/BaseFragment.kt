@@ -10,7 +10,7 @@ import android.view.ViewGroup
  * Created by lin on 2018/2/5.
  */
 abstract class BaseFragment : Fragment() {
-    protected var contentView: View? = null
+    var contentView: View? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contentView = inflater?.inflate(getLayoutId(), container, false)
         return contentView

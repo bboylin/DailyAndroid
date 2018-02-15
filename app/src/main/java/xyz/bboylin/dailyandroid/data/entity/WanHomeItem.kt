@@ -35,6 +35,6 @@ data class WanHomeItem(val publishTime: Long = 0,
                        val envelopePic: String = "",
                        val chapterId: Int = 0,
                        val id: Int = 0,
-                       val collect: Boolean = false,
+                       var collect: Boolean = false,
                        val courseId: Int = 0,
                        val desc: String = "")

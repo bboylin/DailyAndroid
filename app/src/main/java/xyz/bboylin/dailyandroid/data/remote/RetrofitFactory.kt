@@ -4,15 +4,14 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import xyz.bboylin.dailyandroid.data.RepositoryImpl
 import xyz.bboylin.dailyandroid.helper.Constants
+import xyz.bboylin.dailyandroid.helper.util.CookieSPUtil
 import java.lang.StringBuilder
 
 /**
  * Created by lin on 2018/2/6.
  */
 object RetrofitFactory {
-    private val repository = RepositoryImpl.getInstance()
     val GANK_SERVICE = Retrofit.Builder()
             .baseUrl(Constants.GANK_BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -37,14 +36,14 @@ object RetrofitFactory {
                         && !response.headers(Constants.HEADER_SET_COOKIE).isEmpty()) {
                     val cookies = response.headers(Constants.HEADER_SET_COOKIE)
                     val cookie = getEncodedCookie(cookies)
-                    repository.saveCookie(cookie)
+                    CookieSPUtil.saveCookie(cookie)
                 }
                 response
             }
             addInterceptor {
                 val builder = it.request().newBuilder()
-                if (repository.hasLogin()) {
-                    builder.addHeader(Constants.HEADER_COOKIE, repository.getCookie())
+                if (CookieSPUtil.hasLogin()) {
+                    builder.addHeader(Constants.HEADER_COOKIE, CookieSPUtil.getCookie())
                 }
                 it.proceed(builder.build())
             }

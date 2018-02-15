@@ -1,25 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/WeeklyTitleTextAppearance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_marginTop="6dp"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:paddingLeft="20dp" />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/bgImage"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="8dp" />
 
-    <ImageView
-        android:id="@+id/btn_star"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="6dp"
-        android:src="@drawable/collect_black" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_margin="4sp"
+        android:background="@color/grey_bg">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/collectBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/collect_black" />
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/collectBtn"
+            android:text="时间"
+            android:textColor="@color/imageColorPlaceholder"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+</FrameLayout>

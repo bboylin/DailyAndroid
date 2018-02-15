@@ -1,28 +1,28 @@
 package xyz.bboylin.dailyandroid.presentation.adapter
 
-import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.home_item.view.*
 import xyz.bboylin.dailyandroid.R
-import xyz.bboylin.dailyandroid.data.entity.GankHomeItem
+import xyz.bboylin.dailyandroid.data.entity.BaseResponse
+import xyz.bboylin.dailyandroid.data.entity.Gank
 import xyz.bboylin.dailyandroid.data.entity.WanHomeItem
-import xyz.bboylin.dailyandroid.presentation.OnLoadMoreListener
+import xyz.bboylin.dailyandroid.domain.Usecase
+import xyz.bboylin.dailyandroid.domain.interator.CollectInterator
+import xyz.bboylin.dailyandroid.domain.interator.UncollectInterator
+import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.util.CookieSPUtil
+import xyz.bboylin.dailyandroid.helper.util.LogUtil
+import xyz.bboylin.dailyandroid.presentation.rxevent.ShowLoginWindowEvent
+import xyz.bboylin.universialtoast.UniversalToast
 
 /**
  * 首页的adapter，负责加载更多
  * Created by lin on 2018/2/7.
  */
-class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<HomeAdapter.VH>() {
-    private val TYPE_NORMAL = 1
-    private val TYPE_FOOTER = 2
-    private var onLoadMoreListener: OnLoadMoreListener? = null
-    private var loading = false
-    private val footerElem = Any()
-    private var footerView: View? = null
+class HomeAdapter(items: List<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bindItem(items[position])
@@ -39,64 +39,11 @@ class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<Home
         return VH(view)
     }
 
-    override fun getItemCount(): Int = items.size
-
-    override fun getItemViewType(position: Int): Int = when (position) {
-        itemCount - 1 -> if (items[position].equals(footerElem)) TYPE_FOOTER else TYPE_NORMAL
-        else -> TYPE_NORMAL
-    }
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
-        super.onAttachedToRecyclerView(recyclerView)
-        onLoadMoreListener ?: return
-        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (!loading && getLastVisibleItemPosition(recyclerView?.layoutManager) + 1 >= itemCount) {
-                    startLoadMore(recyclerView?.context)
-                }
-            }
-        })
-    }
-
-    private fun startLoadMore(context: Context?) {
-        items.add(footerElem)
-        notifyItemInserted(itemCount - 1)
-        loading = true
-        onLoadMoreListener?.loadMore()
-    }
-
-    private fun getLastVisibleItemPosition(layoutManager: RecyclerView.LayoutManager?): Int {
-        if (layoutManager is LinearLayoutManager)
-            return layoutManager.findLastVisibleItemPosition()
-        else
-            return RecyclerView.NO_POSITION
-    }
-
-    fun addData(list: List<Any>) {
-        footerView = null
-        if (items.remove(footerElem)) {
-            notifyItemRemoved(itemCount)
-        }
-        for (item in list) {
-            items.add(item)
-        }
-        loading = false
-        notifyItemRangeInserted(itemCount - list.size, list.size)
-    }
-
     fun refreshData(list: ArrayList<Any>) {
         if (items.containsAll(list)) {
             return
         }
-        items.clear()
-        for (item in list) {
-            items.add(item)
-        }
+        items = items.minus(items.asIterable()).plus(list.asIterable())
         notifyDataSetChanged()
     }
 
@@ -107,16 +54,12 @@ class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<Home
         footerView?.findViewById<View>(R.id.load_more_loading_view)?.visibility = View.GONE
     }
 
-    fun setOnLoadMoreListener(onLoadMoreListener: OnLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener
-    }
-
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItem(item: Any) {
-            if (item is GankHomeItem) {
+            if (item is Gank) {
                 itemView.title.text = item.desc
                 itemView.date.text = item.publishedAt!!.split("T")[0]
-                itemView.author.text = item.who ?: "佚名"
+                itemView.author.text = item.who ?: "干货营"
                 itemView.btn_star.setOnClickListener { v ->
                     itemView.btn_star.setImageResource(R.drawable.collect_success)
                 }
@@ -127,7 +70,30 @@ class HomeAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapter<Home
                 itemView.btn_star.setImageResource(
                         if (item.collect) R.drawable.collect_success else R.drawable.collect_black)
                 itemView.btn_star.setOnClickListener { v ->
-                    itemView.btn_star.setImageResource(R.drawable.collect_success)
+                    if (CookieSPUtil.hasLogin()) {
+                        val useCase: Usecase<BaseResponse> = if (item.collect) UncollectInterator(item.id) else CollectInterator(item.id)
+                        val errorMsg = if (item.collect) "取消收藏失败" else "收藏失败"
+                        val successMsg = if (item.collect) "取消收藏成功" else "收藏成功"
+                        useCase.execute()
+                                .subscribe({ response ->
+                                    if (response.errorCode == 0) {
+                                        item.collect = !item.collect
+                                        itemView.btn_star.setImageResource(
+                                                if (item.collect) R.drawable.collect_success else R.drawable.collect_black)
+                                        UniversalToast.makeText(itemView.context, successMsg
+                                                , UniversalToast.LENGTH_SHORT, UniversalToast.CLICKABLE)
+                                                .setClickCallBack("查看", { v ->
+                                                    //todo 跳转我的收藏
+                                                })
+                                                .showSuccess()
+                                    } else {
+                                        UniversalToast.makeText(itemView.context, errorMsg
+                                                , UniversalToast.LENGTH_SHORT).showError()
+                                    }
+                                }, { t -> LogUtil.e("HomeAdapter", "failed in collect or uncollect", t) })
+                    } else {
+                        RxBus.get().post(ShowLoginWindowEvent())
+                    }
                 }
             }
         }

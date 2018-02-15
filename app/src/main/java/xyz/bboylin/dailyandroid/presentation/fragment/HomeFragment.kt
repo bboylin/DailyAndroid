@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.bboylin.dailyandroid.R
-import xyz.bboylin.dailyandroid.data.entity.GankHomeItem
+import xyz.bboylin.dailyandroid.data.entity.Gank
 import xyz.bboylin.dailyandroid.data.entity.WanHomeItem
 import xyz.bboylin.dailyandroid.domain.interator.GankHomeInterator
 import xyz.bboylin.dailyandroid.domain.interator.WanHomeInterator
@@ -40,7 +40,9 @@ class HomeFragment : BaseFragment() {
                 .subscribe({ list ->
                     (recyclerView.adapter as HomeAdapter).addData(list!!)
                     page++
-                    multiStatusView.showContent()
+                    if (firstTime) {
+                        multiStatusView.showContent()
+                    }
                 }, { throwable ->
                     LogUtil.e(TAG, "load data error", throwable)
                     if (firstTime) {
@@ -75,11 +77,11 @@ class HomeFragment : BaseFragment() {
         val linearLayoutManager = LinearLayoutManager(activity as Context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         val homeAdapter = HomeAdapter(ArrayList<Any>())
-        homeAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+        homeAdapter.onLoadMoreListener = object : OnLoadMoreListener {
             override fun loadMore() {
                 loadData(false)
             }
-        })
+        }
         with(recyclerView) {
             setHasFixedSize(true)
             layoutManager = linearLayoutManager
@@ -91,8 +93,8 @@ class HomeFragment : BaseFragment() {
     private fun refreshData() {
         Observable.zip(WanHomeInterator(0).execute().map { response -> response.data!!.datas }
                 , GankHomeInterator(1).execute().map { response -> response.gankList }
-                , object : BiFunction<List<WanHomeItem>?, List<GankHomeItem>?, ArrayList<Any>> {
-            override fun apply(t1: List<WanHomeItem>, t2: List<GankHomeItem>): ArrayList<Any> {
+                , object : BiFunction<List<WanHomeItem>?, List<Gank>?, ArrayList<Any>> {
+            override fun apply(t1: List<WanHomeItem>, t2: List<Gank>): ArrayList<Any> {
                 val list = ArrayList<Any>()
                 for (item in t1) {
                     list.add(item)
@@ -123,6 +125,7 @@ class HomeFragment : BaseFragment() {
 
     companion object {
         val TAG = "HomeFragment"
-        fun getInstance(): HomeFragment = HomeFragment()
+        private val INSTANCE = HomeFragment()
+        fun getInstance(): HomeFragment = INSTANCE
     }
 }

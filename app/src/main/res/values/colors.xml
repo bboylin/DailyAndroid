@@ -11,4 +11,6 @@
     <color name="textColorTitle">#25acc4</color>
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorPopup">#fdf1dd09</color>
+    <color name="imageColorPlaceholder">#ededed</color>
+    <color name="grey_bg">#3f180f0f</color>
 </resources>

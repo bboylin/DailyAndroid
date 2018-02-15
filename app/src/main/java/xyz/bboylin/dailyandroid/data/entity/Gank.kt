@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by lin on 2018/2/6.
  */
-class GankHomeItem {
+class Gank {
     /**
      * _id : 56cc6d23421aa95caa707bba
      * createdAt : 2015-08-06T02:05:32.826Z

@@ -1,5 +1,6 @@
 package xyz.bboylin.dailyandroid.presentation.fragment
 
+import android.view.View
 import kotlinx.android.synthetic.main.fragment_me.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
@@ -13,9 +14,9 @@ class MeFragment : BaseFragment() {
     }
 
     override fun initView() {
-        loginTv.setOnClickListener {
-            LoginPopupWindow.show(activity, contentView!!)
-        }
+        val onClickListener = { v: View? -> LoginPopupWindow.show(activity, contentView!!) }
+        loginTv.setOnClickListener(onClickListener)
+        registerTv.setOnClickListener(onClickListener)
     }
 
     override fun getLayoutId(): Int {
@@ -24,6 +25,7 @@ class MeFragment : BaseFragment() {
 
     companion object {
         val TAG = "MeFragment"
-        fun getInstance(): MeFragment = MeFragment()
+        private val INSTANCE = MeFragment()
+        fun getInstance(): MeFragment = INSTANCE
     }
 }

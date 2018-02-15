@@ -3,6 +3,7 @@ package xyz.bboylin.dailyandroid.helper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import xyz.bboylin.dailyandroid.helper.util.LogUtil
 
 
 /**
@@ -18,15 +19,19 @@ class RxBus private constructor() {
     }
 
     fun post(obj: Any) {
+        LogUtil.d("RxBus", "post:" + obj.javaClass)
         mBus.onNext(obj)
-    }
-
-    fun <T> toObservable(tClass: Class<T>): Observable<T> {
-        return mBus.ofType(tClass)
     }
 
     fun toObservable(): Observable<Any> {
         return mBus
+    }
+
+    // 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者
+    fun <T> toObservable(eventType: Class<T>): Observable<T> {
+        //本质是先filter再cast
+        LogUtil.d("RxBus", "get event of type:" + eventType.canonicalName)
+        return mBus.ofType(eventType)
     }
 
     fun hasObservers(): Boolean {
@@ -34,6 +39,7 @@ class RxBus private constructor() {
     }
 
     companion object {
-        fun get(): RxBus = RxBus()
+        val instance = RxBus()
+        fun get(): RxBus = instance
     }
 }
