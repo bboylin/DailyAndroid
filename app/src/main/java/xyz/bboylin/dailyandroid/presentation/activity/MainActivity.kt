@@ -12,7 +12,7 @@ import xyz.bboylin.dailyandroid.presentation.fragment.BaseFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.HomeFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.MeFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.WeeklyFragment
-import xyz.bboylin.dailyandroid.presentation.rxevent.ShowLoginWindowEvent
+import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
 import xyz.bboylin.universialtoast.UniversalToast
 

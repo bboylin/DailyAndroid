@@ -13,9 +13,9 @@ import xyz.bboylin.dailyandroid.domain.Usecase
 import xyz.bboylin.dailyandroid.domain.interator.CollectInterator
 import xyz.bboylin.dailyandroid.domain.interator.UncollectInterator
 import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
 import xyz.bboylin.dailyandroid.helper.util.CookieSPUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
-import xyz.bboylin.dailyandroid.presentation.rxevent.ShowLoginWindowEvent
 import xyz.bboylin.universialtoast.UniversalToast
 
 /**
