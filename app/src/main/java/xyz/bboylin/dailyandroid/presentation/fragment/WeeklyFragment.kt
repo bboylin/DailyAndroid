@@ -26,7 +26,7 @@ class WeeklyFragment : BaseFragment() {
     private var loadMoreEnabled = true
     private val handler = Handler() { msg ->
         if ((latestIssueId > 0) && (page > 1)) {
-            val weeklyAdapter = WeeklyAdapter(latestIssueId, list!!)
+            val weeklyAdapter = WeeklyAdapter(activity, latestIssueId, list!!)
             weeklyAdapter.onLoadMoreListener = object : OnLoadMoreListener {
                 override fun loadMore() {
                     loadMoreData()
@@ -69,6 +69,7 @@ class WeeklyFragment : BaseFragment() {
 
     private fun loadMoreData() {
         if (!loadMoreEnabled) {
+            (recyclerView.adapter as WeeklyAdapter).showEnd()
             return
         }
         GankWelfareInterator(page).execute()
@@ -77,12 +78,15 @@ class WeeklyFragment : BaseFragment() {
                         loadMoreEnabled = false
                         val extra = latestIssueId + 10 - page * 10
                         if (extra > 0) {
-                            response.gankList = response.gankList?.subList(0, extra - 1)
+                            response.gankList = response.gankList?.subList(0, extra)
                         }
                     }
                     page++
                     (recyclerView.adapter as WeeklyAdapter).addData(response.gankList!!)
-                }, { t -> LogUtil.e(TAG, "load more failed!", t) })
+                }, { t ->
+                    LogUtil.e(TAG, "load more failed!", t)
+                    (recyclerView.adapter as WeeklyAdapter).showError()
+                })
     }
 
     override fun initView() {

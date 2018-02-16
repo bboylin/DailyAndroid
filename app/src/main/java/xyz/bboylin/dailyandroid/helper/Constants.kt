@@ -14,4 +14,5 @@ object Constants {
     val REGISTER_PATH = "user/register"
     val HEADER_SET_COOKIE = "set-cookie"
     val HEADER_COOKIE = "Cookie"
+    val WEB_ACTIVITY_EXTRA_KEY = "url"
 }

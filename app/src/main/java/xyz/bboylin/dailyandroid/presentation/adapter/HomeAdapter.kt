@@ -1,5 +1,6 @@
 package xyz.bboylin.dailyandroid.presentation.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,16 +17,17 @@ import xyz.bboylin.dailyandroid.helper.RxBus
 import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
 import xyz.bboylin.dailyandroid.helper.util.CookieSPUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
+import xyz.bboylin.dailyandroid.presentation.activity.WebActivity
 import xyz.bboylin.universialtoast.UniversalToast
 
 /**
  * 首页的adapter，负责加载更多
  * Created by lin on 2018/2/7.
  */
-class HomeAdapter(items: List<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
+class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.bindItem(items[position])
+        holder.bindItem(context, items[position])
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH {
@@ -55,7 +57,7 @@ class HomeAdapter(items: List<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
     }
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItem(item: Any) {
+        fun bindItem(context: Context, item: Any) {
             if (item is Gank) {
                 itemView.title.text = item.desc
                 itemView.date.text = item.publishedAt!!.split("T")[0]
@@ -63,12 +65,18 @@ class HomeAdapter(items: List<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
                 itemView.btn_star.setOnClickListener { v ->
                     itemView.btn_star.setImageResource(R.drawable.collect_success)
                 }
+                itemView.title.setOnClickListener {
+                    WebActivity.start(context, item.url!!)
+                }
             } else if (item is WanHomeItem) {
                 itemView.title.text = item.title
                 itemView.date.text = item.niceDate
                 itemView.author.text = item.author
                 itemView.btn_star.setImageResource(
                         if (item.collect) R.drawable.collect_success else R.drawable.collect_black)
+                itemView.title.setOnClickListener {
+                    WebActivity.start(context, item.link)
+                }
                 itemView.btn_star.setOnClickListener { v ->
                     if (CookieSPUtil.hasLogin()) {
                         val useCase: Usecase<BaseResponse> = if (item.collect) UncollectInterator(item.id) else CollectInterator(item.id)

@@ -34,13 +34,28 @@
         android:layout_height="match_parent"
         android:visibility="gone">
 
-
         <TextView
             android:id="@+id/tv_load_failed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="加载失败了，点我再试试？"
+            android:textColor="#0dddb8" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/load_more_end_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_load_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="---- 我也是有底线的 ----"
             android:textColor="#0dddb8" />
 
     </FrameLayout>

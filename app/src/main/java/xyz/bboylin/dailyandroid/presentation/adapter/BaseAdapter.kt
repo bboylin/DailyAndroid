@@ -3,6 +3,7 @@ package xyz.bboylin.dailyandroid.presentation.adapter
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.presentation.OnLoadMoreListener
 
 /**
@@ -35,6 +36,7 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: Li
     }
 
     private fun startLoadMore() {
+        LogUtil.d("BaseAdapter", "start loadmore")
         items = items.plus(footerElem)
         notifyItemInserted(itemCount - 1)
         loading = true
@@ -56,7 +58,6 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: Li
     }
 
     fun addData(list: List<Any>) {
-        footerView = null
         if (items.contains(footerElem)) {
             items = items.minus(footerElem)
             notifyItemRemoved(itemCount)
@@ -64,5 +65,11 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: Li
         items = items.plus(list.asIterable())
         loading = false
         notifyItemRangeInserted(itemCount - list.size, list.size)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        onLoadMoreListener = null
+        footerView = null
     }
 }

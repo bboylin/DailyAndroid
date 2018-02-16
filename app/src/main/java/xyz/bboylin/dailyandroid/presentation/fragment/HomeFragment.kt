@@ -76,7 +76,7 @@ class HomeFragment : BaseFragment() {
         }
         val linearLayoutManager = LinearLayoutManager(activity as Context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        val homeAdapter = HomeAdapter(ArrayList<Any>())
+        val homeAdapter = HomeAdapter(activity, ArrayList<Any>())
         homeAdapter.onLoadMoreListener = object : OnLoadMoreListener {
             override fun loadMore() {
                 loadData(false)
