@@ -22,11 +22,11 @@ import kotlin.concurrent.thread
 class WeeklyFragment : BaseFragment() {
     private var latestIssueId = -1
     private var page = 1
-    private var list: List<Gank>? = null
+    private lateinit var list: List<Gank>
     private var loadMoreEnabled = true
     private val handler = Handler() { msg ->
         if ((latestIssueId > 0) && (page > 1)) {
-            val weeklyAdapter = WeeklyAdapter(activity, latestIssueId, list!!)
+            val weeklyAdapter = WeeklyAdapter(activity, latestIssueId, list)
             weeklyAdapter.onLoadMoreListener = object : OnLoadMoreListener {
                 override fun loadMore() {
                     loadMoreData()
@@ -78,11 +78,11 @@ class WeeklyFragment : BaseFragment() {
                         loadMoreEnabled = false
                         val extra = latestIssueId + 10 - page * 10
                         if (extra > 0) {
-                            response.gankList = response.gankList?.subList(0, extra)
+                            response.gankList = response.gankList.subList(0, extra)
                         }
                     }
                     page++
-                    (recyclerView.adapter as WeeklyAdapter).addData(response.gankList!!)
+                    (recyclerView.adapter as WeeklyAdapter).addData(response.gankList)
                 }, { t ->
                     LogUtil.e(TAG, "load more failed!", t)
                     (recyclerView.adapter as WeeklyAdapter).showError()

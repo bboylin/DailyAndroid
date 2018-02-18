@@ -14,7 +14,7 @@ class MeFragment : BaseFragment() {
     }
 
     override fun initView() {
-        val onClickListener = { v: View? -> LoginPopupWindow.show(activity, contentView!!) }
+        val onClickListener = { v: View? -> LoginPopupWindow.show(activity, contentView) }
         loginTv.setOnClickListener(onClickListener)
         registerTv.setOnClickListener(onClickListener)
     }

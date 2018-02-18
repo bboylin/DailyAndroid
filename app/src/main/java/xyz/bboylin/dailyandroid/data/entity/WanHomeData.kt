@@ -6,4 +6,4 @@ data class WanHomeData(val over: Boolean = false,
                        val curPage: Int = 0,
                        val offset: Int = 0,
                        val size: Int = 0,
-                       val datas: List<WanHomeItem>?)
+                       val datas: List<WanHomeItem>)

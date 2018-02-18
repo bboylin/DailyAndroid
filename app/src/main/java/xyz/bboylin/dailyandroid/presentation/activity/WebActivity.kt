@@ -11,7 +11,7 @@ import xyz.bboylin.dailyandroid.helper.Constants
  * Created by lin on 2018/2/16.
  */
 class WebActivity : BaseActivity() {
-    private var url: String? = null
+    private var url: String = ""
     override fun getLayoutId(): Int = R.layout.activity_web
 
     override fun initView() {

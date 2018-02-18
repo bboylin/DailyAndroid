@@ -16,7 +16,7 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: Li
     var onLoadMoreListener: OnLoadMoreListener? = null
     protected var loading = false
     protected val footerElem = Any()
-    protected var footerView: View? = null
+    protected lateinit var footerView: View
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -70,6 +70,5 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: Li
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
         super.onDetachedFromRecyclerView(recyclerView)
         onLoadMoreListener = null
-        footerView = null
     }
 }

@@ -9,8 +9,8 @@ import xyz.bboylin.dailyandroid.helper.Constants
  * Created by lin on 2018/2/11.
  */
 object CookieSPUtil {
-    private var context: Context? = null
-    private var sp: SharedPreferences? = null
+    private lateinit var context: Context
+    private lateinit var sp: SharedPreferences
     private val TAG = CookieSPUtil.javaClass.simpleName
 
     fun initContext(context: Context) {
@@ -19,14 +19,14 @@ object CookieSPUtil {
     }
 
     fun hasLogin(): Boolean {
-        LogUtil.d(TAG, "hasLogin:" + sp?.getString(Constants.SP_COOKIE_KEY, ""))
-        return !TextUtils.isEmpty(sp?.getString(Constants.SP_COOKIE_KEY, ""))
+        LogUtil.d(TAG, "hasLogin:" + sp.getString(Constants.SP_COOKIE_KEY, ""))
+        return !TextUtils.isEmpty(sp.getString(Constants.SP_COOKIE_KEY, ""))
     }
 
     fun saveCookie(cookie: String) {
 //        sp?.edit()?.putString(Constants.SP_COOKIE_KEY, CiphserUtil.encrypt(cookie))
-        sp?.edit()?.putString(Constants.SP_COOKIE_KEY, cookie)?.apply()
+        sp.edit().putString(Constants.SP_COOKIE_KEY, cookie).apply()
     }
 
-    fun getCookie(): String = sp?.getString(Constants.SP_COOKIE_KEY, "")!!
+    fun getCookie(): String = sp.getString(Constants.SP_COOKIE_KEY, "")
 }

@@ -38,20 +38,20 @@ class WeeklyAdapter(private val context: Context, private val len: Int, items: L
     }
 
     fun showError() {
-        val loadMoreFailedView = footerView?.findViewById<View>(R.id.load_more_failed_view)
-        val loadMoreEndView = footerView?.findViewById<View>(R.id.load_more_end_view)
-        loadMoreFailedView?.visibility = View.VISIBLE
-        loadMoreEndView?.visibility = View.GONE
-        footerView?.findViewById<View>(R.id.load_more_loading_view)?.visibility = View.GONE
-        loadMoreFailedView?.setOnClickListener { v -> onLoadMoreListener?.loadMore() }
+        val loadMoreFailedView = footerView.findViewById<View>(R.id.load_more_failed_view)
+        val loadMoreEndView = footerView.findViewById<View>(R.id.load_more_end_view)
+        loadMoreFailedView.visibility = View.VISIBLE
+        loadMoreEndView.visibility = View.GONE
+        footerView.findViewById<View>(R.id.load_more_loading_view).visibility = View.GONE
+        loadMoreFailedView.setOnClickListener { v -> onLoadMoreListener?.loadMore() }
     }
 
     fun showEnd() {
-        val loadMoreFailedView = footerView?.findViewById<View>(R.id.load_more_failed_view)
-        val loadMoreEndView = footerView?.findViewById<View>(R.id.load_more_end_view)
-        loadMoreFailedView?.visibility = View.GONE
-        loadMoreEndView?.visibility = View.VISIBLE
-        footerView?.findViewById<View>(R.id.load_more_loading_view)?.visibility = View.GONE
+        val loadMoreFailedView = footerView.findViewById<View>(R.id.load_more_failed_view)
+        val loadMoreEndView = footerView.findViewById<View>(R.id.load_more_end_view)
+        loadMoreFailedView.visibility = View.GONE
+        loadMoreEndView.visibility = View.VISIBLE
+        footerView.findViewById<View>(R.id.load_more_loading_view).visibility = View.GONE
     }
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {

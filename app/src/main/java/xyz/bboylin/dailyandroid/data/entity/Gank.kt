@@ -17,19 +17,19 @@ class Gank {
      * who : 有时放纵
      */
     @SerializedName("_id")
-    var id: String? = null
+    var id: String = ""
     @SerializedName("createdAt")
-    var createdAt: String? = null
+    var createdAt: String = ""
     @SerializedName("desc")
-    var desc: String? = null
+    var desc: String = ""
     @SerializedName("publishedAt")
-    var publishedAt: String? = null
+    var publishedAt: String = ""
     @SerializedName("type")
-    var type: String? = null
+    var type: String = ""
     @SerializedName("url")
-    var url: String? = null
+    var url: String = ""
     @SerializedName("used")
     var used: Boolean = false
     @SerializedName("who")
-    var who: String? = null
+    var who: String = ""
 }

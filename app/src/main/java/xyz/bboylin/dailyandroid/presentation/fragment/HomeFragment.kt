@@ -21,6 +21,7 @@ import xyz.bboylin.dailyandroid.domain.interator.WanHomeInterator
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.helper.util.NetworkUtil
 import xyz.bboylin.dailyandroid.presentation.OnLoadMoreListener
+import xyz.bboylin.dailyandroid.presentation.activity.WebActivity
 import xyz.bboylin.dailyandroid.presentation.adapter.HomeAdapter
 import xyz.bboylin.dailyandroid.presentation.widget.SimpleItemDecoration
 import xyz.bboylin.universialtoast.UniversalToast
@@ -42,10 +43,10 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun loadData(firstTime: Boolean) {
-        Observable.mergeDelayError(WanHomeInterator(page).execute().map { response -> response.data!!.datas }
+        Observable.mergeDelayError(WanHomeInterator(page).execute().map { response -> response.data.datas }
                 , GankHomeInterator(page + 1).execute().map { response -> response.gankList })
                 .subscribe({ list ->
-                    (recyclerView.adapter as HomeAdapter).addData(list!!)
+                    (recyclerView.adapter as HomeAdapter).addData(list)
                     page++
                     if (firstTime) {
                         multiStatusView.showContent()
@@ -66,11 +67,16 @@ class HomeFragment : BaseFragment() {
                 .subscribe({ response ->
                     (recyclerView.adapter as HomeAdapter).addHeader(object : BannerView.ViewFactory<BannerItem> {
                         override fun create(item: BannerItem?, position: Int, container: ViewGroup?): View {
-                            val draweeView = SimpleDraweeView(container!!.context)
-                            draweeView.setImageURI(Uri.parse(item!!.imagePath))
+                            val draweeView = SimpleDraweeView(container?.context)
+                            item?.let {
+                                draweeView.setImageURI(Uri.parse(item.imagePath))
+                                draweeView.setOnClickListener { v ->
+                                    WebActivity.start(activity, item.imagePath)
+                                }
+                            }
                             return draweeView
                         }
-                    }, response.data!!)
+                    }, response.data)
                     LogUtil.d(TAG, "getBannerSuccess")
                 }, { throwable -> LogUtil.e(TAG, "获取banner失败", throwable) })
     }
@@ -113,9 +119,9 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun refreshData() {
-        Observable.zip(WanHomeInterator(0).execute().map { response -> response.data!!.datas }
+        Observable.zip(WanHomeInterator(0).execute().map { response -> response.data.datas }
                 , GankHomeInterator(1).execute().map { response -> response.gankList }
-                , object : BiFunction<List<WanHomeItem>?, List<Gank>?, ArrayList<Any>> {
+                , object : BiFunction<List<WanHomeItem>, List<Gank>, ArrayList<Any>> {
             override fun apply(t1: List<WanHomeItem>, t2: List<Gank>): ArrayList<Any> {
                 val list = ArrayList<Any>()
                 for (item in t1) {
@@ -128,7 +134,7 @@ class HomeFragment : BaseFragment() {
             }
         })
                 .subscribe({ list ->
-                    (recyclerView.adapter as HomeAdapter).refreshData(list!!)
+                    (recyclerView.adapter as HomeAdapter).refreshData(list)
                     UniversalToast.makeText(activity as Context, "刷新成功", UniversalToast.LENGTH_SHORT)
                             .showSuccess()
                     page = 1

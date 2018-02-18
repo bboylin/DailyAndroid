@@ -27,7 +27,7 @@ import xyz.bboylin.universialtoast.UniversalToast
  * Created by lin on 2018/2/7.
  */
 class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
-    private var headerView: BannerView<BannerItem>? = null
+    private lateinit var headerView: BannerView<BannerItem>
     private val headerElem = Any()
     private val TYPE_HEADER = 3
 
@@ -37,7 +37,7 @@ class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH {
         if (viewType == TYPE_HEADER) {
-            return VH(headerView!!)
+            return VH(headerView)
         }
         val view = LayoutInflater.from(parent?.context).inflate(
                 if (viewType == TYPE_NORMAL) R.layout.home_item else R.layout.load_more_footer_view, parent, false)
@@ -56,40 +56,36 @@ class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<
 
     fun addHeader(factory: BannerView.ViewFactory<BannerItem>, list: List<BannerItem>) {
         headerView = LayoutInflater.from(context).inflate(R.layout.banner_header, null, false) as BannerView<BannerItem>
-        LogUtil.d("addHeader", (headerView != null).toString())
-        headerView?.setViewFactory(factory)
-        headerView?.setDataList(list)
+        headerView.setViewFactory(factory)
+        headerView.setDataList(list)
         (items as ArrayList<Any>).add(0, headerElem)
         notifyItemInserted(0)
-        headerView?.start()
+        headerView.start()
     }
 
     fun refreshData(list: ArrayList<Any>) {
-        if (items.containsAll(list)) {
-            return
-        }
-        items = items.minus(items.asIterable()).plus(list.asIterable())
+        items = items.minus(items.asIterable()).plus(headerElem).plus(list.asIterable())
         notifyDataSetChanged()
     }
 
     fun showError() {
-        val loadMoreFailedView = footerView?.findViewById<View>(R.id.load_more_failed_view)
-        loadMoreFailedView?.visibility = View.VISIBLE
-        loadMoreFailedView?.setOnClickListener { v -> onLoadMoreListener?.loadMore() }
-        footerView?.findViewById<View>(R.id.load_more_loading_view)?.visibility = View.GONE
+        val loadMoreFailedView = footerView.findViewById<View>(R.id.load_more_failed_view)
+        loadMoreFailedView.visibility = View.VISIBLE
+        loadMoreFailedView.setOnClickListener { v -> onLoadMoreListener?.loadMore() }
+        footerView.findViewById<View>(R.id.load_more_loading_view).visibility = View.GONE
     }
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItem(context: Context, item: Any) {
             if (item is Gank) {
                 itemView.title.text = item.desc
-                itemView.date.text = item.publishedAt!!.split("T")[0]
-                itemView.author.text = item.who ?: "干货营"
+                itemView.date.text = item.publishedAt.split("T")[0]
+                itemView.author.text = item.who
                 itemView.btn_star.setOnClickListener { v ->
                     itemView.btn_star.setImageResource(R.drawable.collect_success)
                 }
                 itemView.title.setOnClickListener {
-                    WebActivity.start(context, item.url!!)
+                    WebActivity.start(context, item.url)
                 }
             } else if (item is WanHomeItem) {
                 itemView.title.text = item.title

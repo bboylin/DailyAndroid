@@ -7,12 +7,12 @@ import android.widget.RadioGroup
 import kotlinx.android.synthetic.main.bottom_bar.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.presentation.fragment.BaseFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.HomeFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.MeFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.WeeklyFragment
-import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
 import xyz.bboylin.universialtoast.UniversalToast
 
@@ -75,7 +75,10 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
         val disposable = RxBus.get()
                 .toObservable(ShowLoginWindowEvent::class.java)
                 .subscribe({ t ->
-                    LoginPopupWindow.show(this, getCurrentFragment()?.contentView!!)
+                    val curFragment = getCurrentFragment()
+                    curFragment?.let {
+                        LoginPopupWindow.show(this, curFragment.contentView)
+                    }
                 }, { t -> LogUtil.e("MainActivity", "弹出登录界面失败", t) })
         compositeDisposable.add(disposable)
     }
