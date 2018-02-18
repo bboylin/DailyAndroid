@@ -11,13 +11,11 @@ import android.view.View
  * recyclerView分割线
  * Created by lin on 2018/2/6.
  */
-class SimpleItemDecoration : ItemDecoration() {
+class SimpleItemDecoration(margin: Int) : ItemDecoration() {
     private val paint = Paint()
     private var margin = 0
 
-    fun SimpleItemDecoration() {}
-
-    fun SimpleItemDecoration(margin: Int) {
+    init {
         this.margin = margin
     }
 
@@ -28,7 +26,7 @@ class SimpleItemDecoration : ItemDecoration() {
     override fun onDrawOver(c: Canvas?, parent: RecyclerView?, state: RecyclerView.State?) {
         super.onDrawOver(c, parent, state)
         paint.setARGB(100, 20, 20, 20)
-        for (i in 0..(parent?.childCount!!-1)) {
+        for (i in 0..(parent?.childCount!! - 1)) {
             val child = parent.getChildAt(i)
             c?.drawLine((child.left + margin).toFloat(), child.bottom.toFloat()
                     , (child.right - margin).toFloat(), child.bottom.toFloat(), paint)

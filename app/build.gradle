@@ -45,7 +45,9 @@ dependencies {
 //    kapt "com.android.databinding:compiler:3.0.1"
     //jsoup
     implementation 'org.jsoup:jsoup:1.11.2'
-    //image
+    //image loader
     implementation 'com.facebook.fresco:fresco:1.8.1'
     implementation 'com.facebook.fresco:animated-gif:1.8.1'
+    //banner
+    implementation 'com.github.czy1121:bannerview:1.0.2'
 }

@@ -3,6 +3,7 @@ package xyz.bboylin.dailyandroid.data.remote
 import io.reactivex.Observable
 import retrofit2.http.*
 import xyz.bboylin.dailyandroid.data.entity.AccountResponse
+import xyz.bboylin.dailyandroid.data.entity.BannerResponse
 import xyz.bboylin.dailyandroid.data.entity.BaseResponse
 import xyz.bboylin.dailyandroid.data.entity.WanHomeResponse
 
@@ -53,4 +54,7 @@ interface WanAndroidService {
      */
     @POST("lg/uncollect_originId/{id}/json")
     fun uncollect(@Path("id") id: Int): Observable<BaseResponse>
+
+    @GET("banner/json")
+    fun getBanner(): Observable<BannerResponse>
 }

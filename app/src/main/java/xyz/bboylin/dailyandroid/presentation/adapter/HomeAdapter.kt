@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import ezy.ui.view.BannerView
 import kotlinx.android.synthetic.main.home_item.view.*
 import xyz.bboylin.dailyandroid.R
+import xyz.bboylin.dailyandroid.data.entity.BannerItem
 import xyz.bboylin.dailyandroid.data.entity.BaseResponse
 import xyz.bboylin.dailyandroid.data.entity.Gank
 import xyz.bboylin.dailyandroid.data.entity.WanHomeItem
@@ -25,12 +27,18 @@ import xyz.bboylin.universialtoast.UniversalToast
  * Created by lin on 2018/2/7.
  */
 class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
+    private var headerView: BannerView<BannerItem>? = null
+    private val headerElem = Any()
+    private val TYPE_HEADER = 3
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bindItem(context, items[position])
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH {
+        if (viewType == TYPE_HEADER) {
+            return VH(headerView!!)
+        }
         val view = LayoutInflater.from(parent?.context).inflate(
                 if (viewType == TYPE_NORMAL) R.layout.home_item else R.layout.load_more_footer_view, parent, false)
         if (viewType == TYPE_FOOTER) {
@@ -39,6 +47,21 @@ class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<
             footerView = view
         }
         return VH(view)
+    }
+
+    override fun getItemViewType(position: Int): Int = when (position) {
+        0 -> if (items[0].equals(headerElem)) TYPE_HEADER else TYPE_NORMAL
+        else -> super.getItemViewType(position)
+    }
+
+    fun addHeader(factory: BannerView.ViewFactory<BannerItem>, list: List<BannerItem>) {
+        headerView = LayoutInflater.from(context).inflate(R.layout.banner_header, null, false) as BannerView<BannerItem>
+        LogUtil.d("addHeader", (headerView != null).toString())
+        headerView?.setViewFactory(factory)
+        headerView?.setDataList(list)
+        (items as ArrayList<Any>).add(0, headerElem)
+        notifyItemInserted(0)
+        headerView?.start()
     }
 
     fun refreshData(list: ArrayList<Any>) {

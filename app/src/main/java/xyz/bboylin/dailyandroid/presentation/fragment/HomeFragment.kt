@@ -2,14 +2,21 @@ package xyz.bboylin.dailyandroid.presentation.fragment
 
 import android.content.Context
 import android.graphics.Color
+import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
+import android.view.ViewGroup
+import com.facebook.drawee.view.SimpleDraweeView
+import ezy.ui.view.BannerView
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.fragment_home.*
 import xyz.bboylin.dailyandroid.R
+import xyz.bboylin.dailyandroid.data.entity.BannerItem
 import xyz.bboylin.dailyandroid.data.entity.Gank
 import xyz.bboylin.dailyandroid.data.entity.WanHomeItem
 import xyz.bboylin.dailyandroid.domain.interator.GankHomeInterator
+import xyz.bboylin.dailyandroid.domain.interator.GetBannerInterator
 import xyz.bboylin.dailyandroid.domain.interator.WanHomeInterator
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.helper.util.NetworkUtil
@@ -51,6 +58,21 @@ class HomeFragment : BaseFragment() {
                         (recyclerView.adapter as HomeAdapter).showError()
                     }
                 })
+        if (!firstTime) {
+            return
+        }
+        LogUtil.d(TAG, "getBanner")
+        GetBannerInterator().execute()
+                .subscribe({ response ->
+                    (recyclerView.adapter as HomeAdapter).addHeader(object : BannerView.ViewFactory<BannerItem> {
+                        override fun create(item: BannerItem?, position: Int, container: ViewGroup?): View {
+                            val draweeView = SimpleDraweeView(container!!.context)
+                            draweeView.setImageURI(Uri.parse(item!!.imagePath))
+                            return draweeView
+                        }
+                    }, response.data!!)
+                    LogUtil.d(TAG, "getBannerSuccess")
+                }, { throwable -> LogUtil.e(TAG, "获取banner失败", throwable) })
     }
 
     override fun initView() {
@@ -85,7 +107,7 @@ class HomeFragment : BaseFragment() {
         with(recyclerView) {
             setHasFixedSize(true)
             layoutManager = linearLayoutManager
-            addItemDecoration(SimpleItemDecoration())
+            addItemDecoration(SimpleItemDecoration(8))
             adapter = homeAdapter
         }
     }

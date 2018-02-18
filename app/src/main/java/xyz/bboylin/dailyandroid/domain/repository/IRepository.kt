@@ -1,10 +1,7 @@
 package xyz.bboylin.dailyandroid.domain.repository
 
 import io.reactivex.Observable
-import xyz.bboylin.dailyandroid.data.entity.AccountResponse
-import xyz.bboylin.dailyandroid.data.entity.BaseResponse
-import xyz.bboylin.dailyandroid.data.entity.GankCategoryResponse
-import xyz.bboylin.dailyandroid.data.entity.WanHomeResponse
+import xyz.bboylin.dailyandroid.data.entity.*
 
 /**
  * Created by lin on 2018/2/6.
@@ -17,4 +14,5 @@ interface IRepository {
     fun login(userName: String, password: String): Observable<AccountResponse>
     fun collect(id: Int): Observable<BaseResponse>
     fun unCollect(id: Int): Observable<BaseResponse>
+    fun getBanner(): Observable<BannerResponse>
 }

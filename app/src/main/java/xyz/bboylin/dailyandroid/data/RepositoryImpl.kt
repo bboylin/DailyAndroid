@@ -1,10 +1,7 @@
 package xyz.bboylin.dailyandroid.data
 
 import io.reactivex.Observable
-import xyz.bboylin.dailyandroid.data.entity.AccountResponse
-import xyz.bboylin.dailyandroid.data.entity.BaseResponse
-import xyz.bboylin.dailyandroid.data.entity.GankCategoryResponse
-import xyz.bboylin.dailyandroid.data.entity.WanHomeResponse
+import xyz.bboylin.dailyandroid.data.entity.*
 import xyz.bboylin.dailyandroid.data.remote.RetrofitFactory
 import xyz.bboylin.dailyandroid.domain.repository.IRepository
 
@@ -12,6 +9,11 @@ import xyz.bboylin.dailyandroid.domain.repository.IRepository
  * Created by lin on 2018/2/6.
  */
 class RepositoryImpl : IRepository {
+    override fun getBanner(): Observable<BannerResponse> {
+        val service = RetrofitFactory.WAN_ANDROID_RETROFIT
+        return service.getBanner()
+    }
+
     override fun unCollect(id: Int): Observable<BaseResponse> {
         val service = RetrofitFactory.WAN_ANDROID_RETROFIT
         return service.uncollect(id)
