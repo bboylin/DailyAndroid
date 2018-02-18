@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.thefinestartist.finestwebview.FinestWebView
 import ezy.ui.view.BannerView
 import kotlinx.android.synthetic.main.home_item.view.*
 import xyz.bboylin.dailyandroid.R
@@ -19,14 +20,13 @@ import xyz.bboylin.dailyandroid.helper.RxBus
 import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
 import xyz.bboylin.dailyandroid.helper.util.CookieSPUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
-import xyz.bboylin.dailyandroid.presentation.activity.WebActivity
 import xyz.bboylin.universialtoast.UniversalToast
 
 /**
  * 首页的adapter，负责加载更多
  * Created by lin on 2018/2/7.
  */
-class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
+class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
     private lateinit var headerView: BannerView<BannerItem>
     private val headerElem = Any()
     private val TYPE_HEADER = 3
@@ -58,13 +58,15 @@ class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<
         headerView = LayoutInflater.from(context).inflate(R.layout.banner_header, null, false) as BannerView<BannerItem>
         headerView.setViewFactory(factory)
         headerView.setDataList(list)
-        (items as ArrayList<Any>).add(0, headerElem)
+        items.add(0, headerElem)
         notifyItemInserted(0)
         headerView.start()
     }
 
     fun refreshData(list: ArrayList<Any>) {
-        items = items.minus(items.asIterable()).plus(headerElem).plus(list.asIterable())
+        items.clear()
+        items.add(headerElem)
+        items.addAll(list)
         notifyDataSetChanged()
     }
 
@@ -85,7 +87,7 @@ class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<
                     itemView.btn_star.setImageResource(R.drawable.collect_success)
                 }
                 itemView.title.setOnClickListener {
-                    WebActivity.start(context, item.url)
+                    FinestWebView.Builder(context).show(item.url)
                 }
             } else if (item is WanHomeItem) {
                 itemView.title.text = item.title
@@ -94,7 +96,7 @@ class HomeAdapter(private val context: Context, items: List<Any>) : BaseAdapter<
                 itemView.btn_star.setImageResource(
                         if (item.collect) R.drawable.collect_success else R.drawable.collect_black)
                 itemView.title.setOnClickListener {
-                    WebActivity.start(context, item.link)
+                    FinestWebView.Builder(context).show(item.link)
                 }
                 itemView.btn_star.setOnClickListener { v ->
                     if (CookieSPUtil.hasLogin()) {

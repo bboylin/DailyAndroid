@@ -6,17 +6,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.weekly_item.view.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.data.entity.Gank
 import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
-import xyz.bboylin.dailyandroid.presentation.activity.WebActivity
 
 /**
  * Created by lin on 2018/2/9.
  */
-class WeeklyAdapter(private val context: Context, private val len: Int, items: List<Gank>) : BaseAdapter<WeeklyAdapter.VH>(items) {
+class WeeklyAdapter(private val context: Context, private val len: Int, items: ArrayList<Any>) : BaseAdapter<WeeklyAdapter.VH>(items) {
 
     override fun onBindViewHolder(holder: VH?, position: Int) {
         if (items[position].equals(footerElem)) {
@@ -60,8 +60,7 @@ class WeeklyAdapter(private val context: Context, private val len: Int, items: L
             itemView.bgImage.setImageURI(Uri.parse(gank.url))
             itemView.bgImage.setOnClickListener { v ->
                 val url = Constants.WEEKLY_BASE_URL + Constants.WEEKLY_PATH_PREFIX + id + "/"
-                //todo load url in webview
-                WebActivity.start(context, url)
+                FinestWebView.Builder(context).show(url)
                 LogUtil.d("weeklyAdapter", "load url:" + url)
             }
             itemView.collectBtn.setOnClickListener { v ->

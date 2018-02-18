@@ -25,8 +25,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.activity.WebActivity"
-            android:launchMode="singleTop" />
+            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensor"
+            android:theme="@style/FinestWebViewTheme.Light" />
     </application>
 
 </manifest>

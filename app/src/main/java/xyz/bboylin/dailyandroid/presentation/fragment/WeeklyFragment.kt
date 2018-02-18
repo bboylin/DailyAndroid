@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_weekly.*
 import org.jsoup.Jsoup
 import xyz.bboylin.dailyandroid.R
-import xyz.bboylin.dailyandroid.data.entity.Gank
 import xyz.bboylin.dailyandroid.domain.interator.GankWelfareInterator
 import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
@@ -22,7 +21,7 @@ import kotlin.concurrent.thread
 class WeeklyFragment : BaseFragment() {
     private var latestIssueId = -1
     private var page = 1
-    private lateinit var list: List<Gank>
+    private val list = ArrayList<Any>()
     private var loadMoreEnabled = true
     private val handler = Handler() { msg ->
         if ((latestIssueId > 0) && (page > 1)) {
@@ -58,7 +57,9 @@ class WeeklyFragment : BaseFragment() {
             GankWelfareInterator(page).execute()
                     .subscribe({ response ->
                         page++
-                        list = response.gankList
+                        response.gankList.forEach {
+                            list.add(it)
+                        }
                         handler.sendEmptyMessage(0x123)
                     }, { t -> LogUtil.e(TAG, "get falware error", t) })
         } catch (e: Exception) {

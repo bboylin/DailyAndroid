@@ -1,23 +1,18 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/bgImage"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:layout_marginTop="8dp" />
+        android:layout_height="240dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:layout_margin="4sp"
         android:background="@color/grey_bg">
 
         <ImageView
@@ -33,6 +28,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/collectBtn"
+            android:gravity="center_vertical"
             android:text="时间"
             android:textColor="@color/imageColorPlaceholder"
             android:textSize="18sp" />

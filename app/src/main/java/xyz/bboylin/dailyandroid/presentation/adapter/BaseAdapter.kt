@@ -10,7 +10,7 @@ import xyz.bboylin.dailyandroid.presentation.OnLoadMoreListener
  * 加载更多的基础adapter
  * Created by lin on 2018/2/15.
  */
-abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: List<Any>) : RecyclerView.Adapter<T>() {
+abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: ArrayList<Any>) : RecyclerView.Adapter<T>() {
     protected val TYPE_NORMAL = 1
     protected val TYPE_FOOTER = 2
     var onLoadMoreListener: OnLoadMoreListener? = null
@@ -37,7 +37,7 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: Li
 
     private fun startLoadMore() {
         LogUtil.d("BaseAdapter", "start loadmore")
-        items = items.plus(footerElem)
+        items.add(footerElem)
         notifyItemInserted(itemCount - 1)
         loading = true
         onLoadMoreListener?.loadMore()
@@ -58,11 +58,10 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var items: Li
     }
 
     fun addData(list: List<Any>) {
-        if (items.contains(footerElem)) {
-            items = items.minus(footerElem)
+        if (items.remove(footerElem)) {
             notifyItemRemoved(itemCount)
         }
-        items = items.plus(list.asIterable())
+        items.addAll(list)
         loading = false
         notifyItemRangeInserted(itemCount - list.size, list.size)
     }
