@@ -15,4 +15,6 @@ interface IRepository {
     fun collect(id: Int): Observable<BaseResponse>
     fun unCollect(id: Int): Observable<BaseResponse>
     fun getBanner(): Observable<BannerResponse>
+    fun getCollectList(page: Int): Observable<CollectListResponse>
+    fun collectOutside(title: String, author: String, link: String): Observable<CollectOutsideResponse>
 }

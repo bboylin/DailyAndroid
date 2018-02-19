@@ -14,6 +14,7 @@ import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 
 /**
+ * 周报的adapter
  * Created by lin on 2018/2/9.
  */
 class WeeklyAdapter(private val context: Context, private val len: Int, items: ArrayList<Any>) : BaseAdapter<WeeklyAdapter.VH>(items) {

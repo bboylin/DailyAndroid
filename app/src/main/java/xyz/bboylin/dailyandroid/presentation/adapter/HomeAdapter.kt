@@ -23,7 +23,7 @@ import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.universialtoast.UniversalToast
 
 /**
- * 首页的adapter，负责加载更多
+ * 首页的adapter,header是轮播图
  * Created by lin on 2018/2/7.
  */
 class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
@@ -84,7 +84,8 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
                 itemView.date.text = item.publishedAt.split("T")[0]
                 itemView.author.text = item.who
                 itemView.btn_star.setOnClickListener { v ->
-                    itemView.btn_star.setImageResource(R.drawable.collect_success)
+                    //                    itemView.btn_star.setImageResource(R.drawable.collect_success)
+                    //todo 需要持久化一份站外文章收藏列表，以判断是收藏还是取消收藏。
                 }
                 itemView.title.setOnClickListener {
                     FinestWebView.Builder(context).show(item.url)

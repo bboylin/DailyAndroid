@@ -17,6 +17,9 @@ class MeFragment : BaseFragment() {
         val onClickListener = { v: View? -> LoginPopupWindow.show(activity, contentView) }
         loginTv.setOnClickListener(onClickListener)
         registerTv.setOnClickListener(onClickListener)
+        collectionTv.setOnClickListener {
+            //todo 收藏列表
+        }
     }
 
     override fun getLayoutId(): Int {

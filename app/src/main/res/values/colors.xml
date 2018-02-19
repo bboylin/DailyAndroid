@@ -10,7 +10,7 @@
     <color name="color_title_bg">#CCFFFFFF</color>
     <color name="textColorTitle">#25acc4</color>
     <color name="colorWhite">#FFFFFFFF</color>
-    <color name="colorPopup">#fdf1dd09</color>
+    <color name="colorPopup">#ededed</color>
     <color name="imageColorPlaceholder">#ededed</color>
     <color name="grey_bg">#3f180f0f</color>
 </resources>
