@@ -88,6 +88,8 @@ class WeeklyAdapter(private val context: Context, private val len: Int, items: A
                                     UniversalToast.makeText(context, "取消收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
                                     collections.remove(url + "$#$" + id)
                                     itemView.collectBtn.setImageResource(R.drawable.collect_black)
+                                    hasCollected = false
+                                    id = -1
                                 }
                             }, { throwable ->
                                 LogUtil.e(TAG, "取消收藏失败", throwable)
@@ -99,6 +101,8 @@ class WeeklyAdapter(private val context: Context, private val len: Int, items: A
                                 collections.add(response.data.link + "$#$" + response.data.id)
                                 UniversalToast.makeText(context, "收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
                                 itemView.collectBtn.setImageResource(R.drawable.collect_success)
+                                hasCollected = true
+                                id = response.data.id
                             }, { throwable ->
                                 LogUtil.e(TAG, "收藏失败", throwable)
                                 UniversalToast.makeText(context, "收藏失败", UniversalToast.LENGTH_SHORT).showError()
