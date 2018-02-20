@@ -16,13 +16,15 @@ import android.widget.TextView
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.domain.interator.LoginInterator
 import xyz.bboylin.dailyandroid.domain.interator.RegisterInterator
+import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.LoginSuccessEvent
 import xyz.bboylin.dailyandroid.helper.util.DensityUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.universialtoast.UniversalToast
 
 
 /**
- * todo 背景配色太丑了，改改。
+ * 注册登录
  * Created by lin on 2018/2/11.
  */
 object LoginPopupWindow {
@@ -59,9 +61,9 @@ object LoginPopupWindow {
                 RegisterInterator(username, password).execute()
                         .flatMap { t -> LoginInterator(username, password).execute() }
                         .subscribe({ t ->
-                            //todo 保存收藏列表 t.data.collectIds
                             UniversalToast.makeText(context, "注册成功"
                                     , UniversalToast.LENGTH_SHORT, UniversalToast.EMPHASIZE).showSuccess()
+                            RxBus.get().post(LoginSuccessEvent(username))
                             popupWindow.dismiss()
                         }, { throwable ->
                             LogUtil.e(TAG, "注册失败", throwable)
@@ -79,9 +81,9 @@ object LoginPopupWindow {
             } else {
                 LoginInterator(username, password).execute()
                         .subscribe({ t ->
-                            //todo 保存收藏列表 t.data.collectIds
                             UniversalToast.makeText(context, "登录成功"
                                     , UniversalToast.LENGTH_SHORT, UniversalToast.EMPHASIZE).showSuccess()
+                            RxBus.get().post(LoginSuccessEvent(username))
                             popupWindow.dismiss()
                         }, { throwable ->
                             LogUtil.e(TAG, "登录失败", throwable)

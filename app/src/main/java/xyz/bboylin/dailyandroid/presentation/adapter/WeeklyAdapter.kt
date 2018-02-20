@@ -10,8 +10,12 @@ import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.weekly_item.view.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.data.entity.Gank
+import xyz.bboylin.dailyandroid.domain.interator.CollectOutsideInterator
+import xyz.bboylin.dailyandroid.domain.interator.UncollectInterator
 import xyz.bboylin.dailyandroid.helper.Constants
+import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
+import xyz.bboylin.universialtoast.UniversalToast
 
 /**
  * 周报的adapter
@@ -57,17 +61,55 @@ class WeeklyAdapter(private val context: Context, private val len: Int, items: A
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItem(context: Context, id: Int, gank: Gank) {
-            itemView.titleTv.text = Constants.WEEKLY_TITLE_PREFIX + "#" + id
+            val title = Constants.WEEKLY_TITLE_PREFIX + "#" + id
+            itemView.titleTv.text = title
             itemView.bgImage.setImageURI(Uri.parse(gank.url))
+            val url = Constants.WEEKLY_BASE_URL + Constants.WEEKLY_PATH_PREFIX + id + "/"
             itemView.bgImage.setOnClickListener { v ->
-                val url = Constants.WEEKLY_BASE_URL + Constants.WEEKLY_PATH_PREFIX + id + "/"
-                FinestWebView.Builder(context).show(url)
-                LogUtil.d("weeklyAdapter", "load url:" + url)
+                FinestWebView.Builder(context).titleDefault("Android技术周报#${id}").show(url)
+                LogUtil.d(TAG, "load url:" + url)
             }
+            var hasCollected = false
+            var id = -1
+            for (it in collections) {
+                if (it.startsWith(url)) {
+                    hasCollected = true
+                    id = it.split("$#$")[1].toInt()
+                    break
+                }
+            }
+            itemView.collectBtn.setImageResource(
+                    if (hasCollected) R.drawable.collect_success else R.drawable.collect_black)
             itemView.collectBtn.setOnClickListener { v ->
-                LogUtil.d("weeklyAdapter", "collect btn clicked!!!")
-                itemView.collectBtn.setImageResource(R.drawable.collect_success)
+                if (hasCollected) {
+                    UncollectInterator(id).execute()
+                            .subscribe({ response ->
+                                if (response.errorCode == 0) {
+                                    UniversalToast.makeText(context, "取消收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
+                                    collections.remove(url + "$#$" + id)
+                                    itemView.collectBtn.setImageResource(R.drawable.collect_black)
+                                }
+                            }, { throwable ->
+                                LogUtil.e(TAG, "取消收藏失败", throwable)
+                                UniversalToast.makeText(context, "取消收藏失败", UniversalToast.LENGTH_SHORT).showError()
+                            })
+                } else {
+                    CollectOutsideInterator(title, "脉脉不得语", url).execute()
+                            .subscribe({ response ->
+                                collections.add(response.data.link + "$#$" + response.data.id)
+                                UniversalToast.makeText(context, "收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
+                                itemView.collectBtn.setImageResource(R.drawable.collect_success)
+                            }, { throwable ->
+                                LogUtil.e(TAG, "收藏失败", throwable)
+                                UniversalToast.makeText(context, "收藏失败", UniversalToast.LENGTH_SHORT).showError()
+                            })
+                }
             }
         }
+    }
+
+    companion object {
+        private val collections = CollectionUtil.getCollection()
+        private val TAG = WeeklyAdapter::class.java.simpleName
     }
 }

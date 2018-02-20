@@ -9,10 +9,10 @@ object Constants {
     val WEEKLY_BASE_URL = "https://www.androidweekly.cn/"
     val WEEKLY_PATH_PREFIX = "android-dev-weekly-issue-"
     val WEEKLY_TITLE_PREFIX = "Android开发技术周报 ISSUE"
-    val SP_COOKIE_KEY = "cookie"
     val LOGIN_PATH = "user/login"
     val REGISTER_PATH = "user/register"
     val HEADER_SET_COOKIE = "set-cookie"
     val HEADER_COOKIE = "Cookie"
-    val WEB_ACTIVITY_EXTRA_KEY = "url"
+    val SP_COOKIE_KEY = "cookie"
+    val SP_COLLECTION_KEY = "COLLECTION"
 }

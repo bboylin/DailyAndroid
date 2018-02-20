@@ -8,13 +8,13 @@ import xyz.bboylin.dailyandroid.helper.Constants
 /**
  * Created by lin on 2018/2/11.
  */
-object CookieSPUtil {
+object AccountUtil {
     private lateinit var context: Context
     private lateinit var sp: SharedPreferences
-    private val TAG = CookieSPUtil.javaClass.simpleName
+    private val TAG = AccountUtil.javaClass.simpleName
 
     fun initContext(context: Context) {
-        CookieSPUtil.context = context
+        this.context = context
         sp = context.getSharedPreferences(Constants.SP_COOKIE_KEY, Context.MODE_PRIVATE)
     }
 
@@ -29,4 +29,16 @@ object CookieSPUtil {
     }
 
     fun getCookie(): String = sp.getString(Constants.SP_COOKIE_KEY, "")
+
+    fun getUserName(): String {
+        if (hasLogin()) {
+            val cookie = getCookie()
+            cookie.split(";").forEach {
+                if (it.contains("loginUserName=")) {
+                    return it.substringAfter("=")
+                }
+            }
+        }
+        return ""
+    }
 }

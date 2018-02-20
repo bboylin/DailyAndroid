@@ -9,6 +9,11 @@ import xyz.bboylin.dailyandroid.domain.repository.IRepository
  * Created by lin on 2018/2/6.
  */
 class RepositoryImpl : IRepository {
+    override fun uncollectOutside(id: Int): Observable<BaseResponse> {
+        val service = RetrofitFactory.WAN_ANDROID_RETROFIT
+        return service.uncollectOutside(id)
+    }
+
     override fun collectOutside(title: String, author: String, link: String): Observable<CollectOutsideResponse> {
         val service = RetrofitFactory.WAN_ANDROID_RETROFIT
         return service.collectOutside(title, author, link)

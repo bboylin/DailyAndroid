@@ -1,5 +1,6 @@
 package xyz.bboylin.dailyandroid.presentation.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
 import android.view.Gravity
@@ -7,12 +8,15 @@ import android.widget.RadioGroup
 import kotlinx.android.synthetic.main.bottom_bar.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.LoginSuccessEvent
 import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
+import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.presentation.fragment.BaseFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.HomeFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.MeFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.WeeklyFragment
+import xyz.bboylin.dailyandroid.presentation.service.CollectionService
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
 import xyz.bboylin.universialtoast.UniversalToast
 
@@ -72,14 +76,23 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
     }
 
     override fun initData() {
+        if (AccountUtil.hasLogin()) {
+            startService(Intent(this, CollectionService::class.java))
+        }
         val disposable = RxBus.get()
-                .toObservable(ShowLoginWindowEvent::class.java)
+                .toObservable()
                 .subscribe({ t ->
-                    val curFragment = getCurrentFragment()
-                    curFragment?.let {
-                        LoginPopupWindow.show(this, curFragment.contentView)
+                    if (t is ShowLoginWindowEvent) {
+                        val curFragment = getCurrentFragment()
+                        curFragment?.let {
+                            LoginPopupWindow.show(this, curFragment.contentView)
+                        }
+                    } else if (t is LoginSuccessEvent) {
+                        if (AccountUtil.hasLogin()) {
+                            startService(Intent(this, CollectionService::class.java))
+                        }
                     }
-                }, { t -> LogUtil.e("MainActivity", "弹出登录界面失败", t) })
+                }, { t -> LogUtil.e("MainActivity", "error", t) })
         compositeDisposable.add(disposable)
     }
 
@@ -111,5 +124,10 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
                     .setGravity(Gravity.CENTER, 0, 0)
                     .show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopService(Intent(this, CollectionService::class.java))
     }
 }

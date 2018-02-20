@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import xyz.bboylin.dailyandroid.helper.Constants
-import xyz.bboylin.dailyandroid.helper.util.CookieSPUtil
+import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import java.lang.StringBuilder
 
 /**
@@ -36,14 +36,14 @@ object RetrofitFactory {
                         && !response.headers(Constants.HEADER_SET_COOKIE).isEmpty()) {
                     val cookies = response.headers(Constants.HEADER_SET_COOKIE)
                     val cookie = getEncodedCookie(cookies)
-                    CookieSPUtil.saveCookie(cookie)
+                    AccountUtil.saveCookie(cookie)
                 }
                 response
             }
             addInterceptor {
                 val builder = it.request().newBuilder()
-                if (CookieSPUtil.hasLogin()) {
-                    builder.addHeader(Constants.HEADER_COOKIE, CookieSPUtil.getCookie())
+                if (AccountUtil.hasLogin()) {
+                    builder.addHeader(Constants.HEADER_COOKIE, AccountUtil.getCookie())
                 }
                 it.proceed(builder.build())
             }

@@ -30,6 +30,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="sensor"
             android:theme="@style/FinestWebViewTheme.Light" />
+
+        <service
+            android:name=".presentation.service.CollectionService"
+            android:exported="false" />
     </application>
 
 </manifest>

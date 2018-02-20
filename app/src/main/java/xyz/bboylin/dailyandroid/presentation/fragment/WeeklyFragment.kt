@@ -24,6 +24,10 @@ class WeeklyFragment : BaseFragment() {
     private val list = ArrayList<Any>()
     private var loadMoreEnabled = true
     private val handler = Handler() { msg ->
+        if (msg.what == 0x404) {
+            multiStatusView.showError()
+            true
+        }
         if ((latestIssueId > 0) && (page > 1)) {
             val weeklyAdapter = WeeklyAdapter(activity, latestIssueId, list)
             weeklyAdapter.onLoadMoreListener = object : OnLoadMoreListener {
@@ -47,25 +51,26 @@ class WeeklyFragment : BaseFragment() {
     }
 
     private fun loadData() {
-        try {
-            thread(start = true) {
+        thread(start = true) {
+            try {
                 val doc = Jsoup.connect(Constants.WEEKLY_BASE_URL).get()
                 val latestTitle = doc.getElementsByClass("h4 title")[0].text().split("#")
                 latestIssueId = latestTitle[1].toInt()
-                handler.sendEmptyMessage(0x123)
+                handler.sendEmptyMessage(0x200)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                handler.sendEmptyMessage(0x404)
             }
-            GankWelfareInterator(page).execute()
-                    .subscribe({ response ->
-                        page++
-                        response.gankList.forEach {
-                            list.add(it)
-                        }
-                        handler.sendEmptyMessage(0x123)
-                    }, { t -> LogUtil.e(TAG, "get falware error", t) })
-        } catch (e: Exception) {
-            e.printStackTrace()
-            multiStatusView.showError()
         }
+        val disposable = GankWelfareInterator(page).execute()
+                .subscribe({ response ->
+                    page++
+                    response.gankList.forEach {
+                        list.add(it)
+                    }
+                    handler.sendEmptyMessage(0x200)
+                }, { t -> LogUtil.e(TAG, "get falware error", t) })
+        compositeDisposable.add(disposable)
     }
 
     private fun loadMoreData() {
@@ -73,7 +78,7 @@ class WeeklyFragment : BaseFragment() {
             (recyclerView.adapter as WeeklyAdapter).showEnd()
             return
         }
-        GankWelfareInterator(page).execute()
+        val disposable = GankWelfareInterator(page).execute()
                 .subscribe({ response ->
                     if (page * 10 > latestIssueId) {
                         loadMoreEnabled = false
@@ -88,6 +93,7 @@ class WeeklyFragment : BaseFragment() {
                     LogUtil.e(TAG, "load more failed!", t)
                     (recyclerView.adapter as WeeklyAdapter).showError()
                 })
+        compositeDisposable.add(disposable)
     }
 
     override fun initView() {

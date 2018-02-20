@@ -5,11 +5,13 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by lin on 2018/2/5.
  */
 abstract class BaseFragment : Fragment() {
+    protected val compositeDisposable = CompositeDisposable()
     lateinit var contentView: View
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         inflater?.let {
@@ -22,6 +24,11 @@ abstract class BaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initData()
         initView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
     abstract fun getLayoutId(): Int

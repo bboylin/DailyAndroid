@@ -43,7 +43,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun loadData(firstTime: Boolean) {
-        Observable.mergeDelayError(WanHomeInterator(page).execute().map { response -> response.data.datas }
+        val disposable = Observable.mergeDelayError(WanHomeInterator(page).execute().map { response -> response.data.datas }
                 , GankHomeInterator(page + 1).execute().map { response -> response.gankList })
                 .subscribe({ list ->
                     (recyclerView.adapter as HomeAdapter).addData(list)
@@ -59,11 +59,12 @@ class HomeFragment : BaseFragment() {
                         (recyclerView.adapter as HomeAdapter).showError()
                     }
                 })
+        compositeDisposable.add(disposable)
         if (!firstTime) {
             return
         }
         LogUtil.d(TAG, "getBanner")
-        GetBannerInterator().execute()
+        val bannerDisposable = GetBannerInterator().execute()
                 .subscribe({ response ->
                     (recyclerView.adapter as HomeAdapter).addHeader(object : BannerView.ViewFactory<BannerItem> {
                         override fun create(item: BannerItem?, position: Int, container: ViewGroup?): View {
@@ -79,6 +80,7 @@ class HomeFragment : BaseFragment() {
                     }, response.data)
                     LogUtil.d(TAG, "getBannerSuccess")
                 }, { throwable -> LogUtil.e(TAG, "获取banner失败", throwable) })
+        compositeDisposable.add(bannerDisposable)
     }
 
     override fun initView() {
@@ -119,7 +121,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun refreshData() {
-        Observable.zip(WanHomeInterator(0).execute().map { response -> response.data.datas }
+        val disposable = Observable.zip(WanHomeInterator(0).execute().map { response -> response.data.datas }
                 , GankHomeInterator(1).execute().map { response -> response.gankList }
                 , object : BiFunction<List<WanHomeItem>, List<Gank>, ArrayList<Any>> {
             override fun apply(t1: List<WanHomeItem>, t2: List<Gank>): ArrayList<Any> {
@@ -145,6 +147,7 @@ class HomeFragment : BaseFragment() {
                             .showError()
                     refreshLayout.isRefreshing = false
                 })
+        compositeDisposable.add(disposable)
     }
 
     override fun getLayoutId(): Int {

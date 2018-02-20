@@ -45,7 +45,7 @@ interface WanAndroidService {
     fun collect(@Path("id") id: Int): Observable<BaseResponse>
 
     /**
-     * 取消收藏
+     * 取消收藏站内文章
      * @param id 文章id
      * @return 返回response中errorCode为0即为取消收藏成功
      */
@@ -76,4 +76,15 @@ interface WanAndroidService {
     fun collectOutside(@Field("title") title: String
                        , @Field("author") author: String
                        , @Field("link") link: String): Observable<CollectOutsideResponse>
+
+    /**
+     * 取消站外收藏
+     * todo 还有问题，待跟进
+     * @param id
+     * @return
+     */
+    @POST("lg/uncollect/{id}/json")
+    @FormUrlEncoded
+    fun uncollectOutside(@Path("id") id: Int
+                         , @Field("originId") originId: Int = -1): Observable<BaseResponse>
 }
