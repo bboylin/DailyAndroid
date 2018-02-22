@@ -37,7 +37,6 @@ object LoginPopupWindow {
         val size = Point()
         display.getSize(size)
         popupWindow.width = size.x - DensityUtil.dp2pxInt(context, 90f)
-        //设置背景,这个没什么效果，不添加会报错
         popupWindow.setBackgroundDrawable(context.resources.getDrawable(R.drawable.popupwindow_bg))
         //设置点击弹窗外隐藏自身
         popupWindow.setFocusable(true)

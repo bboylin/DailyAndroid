@@ -1,11 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrow</item>
+    </style>
+
+    <!--汉堡包样式-->
+    <style name="AppTheme.DrawerArrow" parent="Widget.AppCompat.DrawerArrowToggle">
+        <!--改变汉堡包颜色为白色-->
+        <item name="color">@android:color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -16,6 +23,12 @@
 
     <style name="AppTheme.NoActionBar.FullScreen">
         <item name="android:windowFullscreen">true</item>
+    </style>
+
+
+    <style name="AppTheme.ToolBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="actionMenuTextColor">@color/colorWhite</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
     <style name="TitleTextAppearance" parent="TextAppearance.AppCompat">

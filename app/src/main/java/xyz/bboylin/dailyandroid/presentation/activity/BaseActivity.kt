@@ -1,6 +1,8 @@
 package xyz.bboylin.dailyandroid.presentation.activity
 
 import android.os.Bundle
+import android.support.annotation.StringRes
+import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 
@@ -21,6 +23,18 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+    }
+
+    protected fun setupToolbar(@StringRes res: Int, hasParent: Boolean = true) {
+        val actionBar = supportActionBar as ActionBar
+        actionBar?.let {
+            if (hasParent) {
+                actionBar.setHomeButtonEnabled(true)
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(res);
+        }
     }
 
     abstract fun getLayoutId(): Int

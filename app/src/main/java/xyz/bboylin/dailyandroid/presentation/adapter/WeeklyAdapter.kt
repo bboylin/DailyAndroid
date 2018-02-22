@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.thefinestartist.finestwebview.FinestWebView
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.weekly_item.view.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.data.entity.Gank
 import xyz.bboylin.dailyandroid.domain.interator.CollectOutsideInterator
-import xyz.bboylin.dailyandroid.domain.interator.UncollectInterator
+import xyz.bboylin.dailyandroid.domain.interator.UncollectOutsideInterator
 import xyz.bboylin.dailyandroid.helper.Constants
+import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.CollectionReadyEvent
 import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.universialtoast.UniversalToast
@@ -22,6 +25,18 @@ import xyz.bboylin.universialtoast.UniversalToast
  * Created by lin on 2018/2/9.
  */
 class WeeklyAdapter(private val context: Context, private val len: Int, items: ArrayList<Any>) : BaseAdapter<WeeklyAdapter.VH>(items) {
+    protected val compositeDisposable = CompositeDisposable()
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+        val disposable = RxBus.get()
+                .toObservable(CollectionReadyEvent::class.java)
+                .subscribe({ t ->
+                    collections = CollectionUtil.getCollection()
+                    notifyDataSetChanged()
+                })
+        compositeDisposable.add(disposable)
+    }
 
     override fun onBindViewHolder(holder: VH?, position: Int) {
         if (items[position].equals(footerElem)) {
@@ -82,7 +97,7 @@ class WeeklyAdapter(private val context: Context, private val len: Int, items: A
                     if (hasCollected) R.drawable.collect_success else R.drawable.collect_black)
             itemView.collectBtn.setOnClickListener { v ->
                 if (hasCollected) {
-                    UncollectInterator(id).execute()
+                    UncollectOutsideInterator(id).execute()
                             .subscribe({ response ->
                                 if (response.errorCode == 0) {
                                     UniversalToast.makeText(context, "取消收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
@@ -112,8 +127,14 @@ class WeeklyAdapter(private val context: Context, private val len: Int, items: A
         }
     }
 
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        CollectionUtil.saveCollections(collections)
+        compositeDisposable.clear()
+    }
+
     companion object {
-        private val collections = CollectionUtil.getCollection()
+        private var collections = CollectionUtil.getCollection() ?: HashSet<String>()
         private val TAG = WeeklyAdapter::class.java.simpleName
     }
 }

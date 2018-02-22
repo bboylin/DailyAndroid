@@ -52,4 +52,6 @@ dependencies {
     implementation 'com.github.czy1121:bannerview:1.0.2'
     //webview
     implementation 'com.thefinestartist:finestwebview:1.2.7'
+    //memory leak
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
 }

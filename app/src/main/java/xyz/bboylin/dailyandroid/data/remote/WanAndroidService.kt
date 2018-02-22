@@ -79,7 +79,6 @@ interface WanAndroidService {
 
     /**
      * 取消站外收藏
-     * todo 还有问题，待跟进
      * @param id
      * @return
      */

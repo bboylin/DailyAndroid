@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import com.facebook.drawee.view.SimpleDraweeView
@@ -90,7 +91,9 @@ class HomeFragment : BaseFragment() {
                 loadData(true)
             } else {
                 UniversalToast.makeText(activity as Context, "请检查网络连接"
-                        , UniversalToast.LENGTH_SHORT).showWarning()
+                        , UniversalToast.LENGTH_SHORT)
+                        .setGravity(Gravity.CENTER, 0, 0)
+                        .showWarning()
             }
         }
         refreshLayout.setColorSchemeColors(Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED)
@@ -138,12 +141,14 @@ class HomeFragment : BaseFragment() {
                 .subscribe({ list ->
                     (recyclerView.adapter as HomeAdapter).refreshData(list)
                     UniversalToast.makeText(activity as Context, "刷新成功", UniversalToast.LENGTH_SHORT)
+                            .setGravity(Gravity.CENTER, 0, 0)
                             .showSuccess()
                     page = 1
                     refreshLayout.isRefreshing = false
                 }, { t ->
                     LogUtil.e(TAG, "刷新失败", t)
                     UniversalToast.makeText(activity as Context, "刷新失败", UniversalToast.LENGTH_SHORT)
+                            .setGravity(Gravity.CENTER, 0, 0)
                             .showError()
                     refreshLayout.isRefreshing = false
                 })

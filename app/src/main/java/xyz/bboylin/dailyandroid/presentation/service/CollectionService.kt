@@ -8,6 +8,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import xyz.bboylin.dailyandroid.data.entity.CollectItem
 import xyz.bboylin.dailyandroid.domain.interator.CollectListInterator
+import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.CollectionReadyEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
@@ -43,6 +45,9 @@ class CollectionService : Service() {
                         LogUtil.d(TAG, "link:${it}")
                     }
                     CollectionUtil.saveCollections(set)
+                    if (set.size > 0) {
+                        RxBus.get().post(CollectionReadyEvent())
+                    }
                 }, { t -> LogUtil.e(TAG, "获取收藏列表失败", t) })
         compositeDisposable.add(disposable)
     }

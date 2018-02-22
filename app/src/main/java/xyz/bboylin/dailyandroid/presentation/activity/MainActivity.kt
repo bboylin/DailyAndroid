@@ -8,8 +8,8 @@ import android.widget.RadioGroup
 import kotlinx.android.synthetic.main.bottom_bar.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginSuccessEvent
-import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.presentation.fragment.BaseFragment
@@ -82,7 +82,7 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
         val disposable = RxBus.get()
                 .toObservable()
                 .subscribe({ t ->
-                    if (t is ShowLoginWindowEvent) {
+                    if (t is LoginEvent) {
                         val curFragment = getCurrentFragment()
                         curFragment?.let {
                             LoginPopupWindow.show(this, curFragment.contentView)

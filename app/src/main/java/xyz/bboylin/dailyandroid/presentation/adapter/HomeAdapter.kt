@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.thefinestartist.finestwebview.FinestWebView
 import ezy.ui.view.BannerView
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.home_item.view.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.data.entity.BannerItem
@@ -18,11 +19,14 @@ import xyz.bboylin.dailyandroid.domain.Usecase
 import xyz.bboylin.dailyandroid.domain.interator.CollectInterator
 import xyz.bboylin.dailyandroid.domain.interator.CollectOutsideInterator
 import xyz.bboylin.dailyandroid.domain.interator.UncollectInterator
+import xyz.bboylin.dailyandroid.domain.interator.UncollectOutsideInterator
 import xyz.bboylin.dailyandroid.helper.RxBus
-import xyz.bboylin.dailyandroid.helper.rxevent.ShowLoginWindowEvent
+import xyz.bboylin.dailyandroid.helper.rxevent.CollectionReadyEvent
+import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
+import xyz.bboylin.dailyandroid.presentation.activity.CollectListActivity
 import xyz.bboylin.universialtoast.UniversalToast
 
 /**
@@ -33,6 +37,18 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
     private lateinit var headerView: BannerView<BannerItem>
     private val headerElem = Any()
     private val TYPE_HEADER = 3
+    protected val compositeDisposable = CompositeDisposable()
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+        val disposable = RxBus.get()
+                .toObservable(CollectionReadyEvent::class.java)
+                .subscribe({ t ->
+                    collections = CollectionUtil.getCollection()
+                    notifyDataSetChanged()
+                })
+        compositeDisposable.add(disposable)
+    }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bindItem(context, items[position])
@@ -83,6 +99,7 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
         super.onDetachedFromRecyclerView(recyclerView)
         CollectionUtil.saveCollections(collections)
+        compositeDisposable.clear()
     }
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -104,7 +121,7 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
                         if (hasCollected) R.drawable.collect_success else R.drawable.collect_black)
                 itemView.btn_star.setOnClickListener { v ->
                     if (hasCollected) {
-                        UncollectInterator(id).execute()
+                        UncollectOutsideInterator(id).execute()
                                 .subscribe({ response ->
                                     if (response.errorCode == 0) {
                                         UniversalToast.makeText(context, "取消收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
@@ -121,7 +138,11 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
                         CollectOutsideInterator(item.desc, itemView.author.text.toString(), item.url).execute()
                                 .subscribe({ response ->
                                     collections.add(response.data.link + "$#$" + response.data.id)
-                                    UniversalToast.makeText(context, "收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
+                                    UniversalToast.makeText(context, "收藏成功", UniversalToast.LENGTH_SHORT, UniversalToast.CLICKABLE)
+                                            .setClickCallBack("查看", { v ->
+                                                CollectListActivity.startFrom(context)
+                                            })
+                                            .showSuccess()
                                     itemView.btn_star.setImageResource(R.drawable.collect_success)
                                     hasCollected = true
                                     id = response.data.id
@@ -157,7 +178,7 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
                                         UniversalToast.makeText(itemView.context, successMsg
                                                 , UniversalToast.LENGTH_SHORT, UniversalToast.CLICKABLE)
                                                 .setClickCallBack("查看", { v ->
-                                                    //todo 跳转我的收藏
+                                                    CollectListActivity.startFrom(context)
                                                 })
                                                 .showSuccess()
                                     } else {
@@ -166,7 +187,7 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
                                     }
                                 }, { t -> LogUtil.e(TAG, "failed in collect or uncollect", t) })
                     } else {
-                        RxBus.get().post(ShowLoginWindowEvent())
+                        RxBus.get().post(LoginEvent())
                     }
                 }
             }
@@ -174,7 +195,7 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
     }
 
     companion object {
-        private val collections = CollectionUtil.getCollection()
+        private var collections = CollectionUtil.getCollection() ?: HashSet<String>()
         private val TAG = HomeAdapter::class.java.simpleName
     }
 }

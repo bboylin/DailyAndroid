@@ -7,6 +7,7 @@ import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.RxBus
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginSuccessEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
+import xyz.bboylin.dailyandroid.presentation.activity.CollectListActivity
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
 
 /**
@@ -23,7 +24,7 @@ class MeFragment : BaseFragment() {
         val onClickListener = { v: View? -> LoginPopupWindow.show(activity, contentView) }
         registerTv.setOnClickListener(onClickListener)
         collectionTv.setOnClickListener {
-            //todo 收藏列表
+            CollectListActivity.startFrom(activity)
         }
         if (!TextUtils.isEmpty(userName)) {
             loginTv.text = userName
@@ -42,9 +43,7 @@ class MeFragment : BaseFragment() {
         compositeDisposable.add(disposable)
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_me
-    }
+    override fun getLayoutId(): Int = R.layout.fragment_me
 
     companion object {
         val TAG = "MeFragment"
