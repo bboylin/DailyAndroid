@@ -24,7 +24,7 @@ import xyz.bboylin.universialtoast.UniversalToast
  * 周报的adapter
  * Created by lin on 2018/2/9.
  */
-class WeeklyAdapter(private val context: Context, private val len: Int, items: ArrayList<Any>) : BaseAdapter<WeeklyAdapter.VH>(items) {
+class WeeklyAdapter(context: Context?, private val len: Int, items: ArrayList<Any>) : BaseAdapter<WeeklyAdapter.VH>(context, items) {
     protected val compositeDisposable = CompositeDisposable()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
@@ -42,36 +42,22 @@ class WeeklyAdapter(private val context: Context, private val len: Int, items: A
         if (items[position].equals(footerElem)) {
             return
         }
-        holder?.bindItem(context, len - position, items[position] as Gank)
+        context?.let {
+            holder?.bindItem(context as Context, len - position, items[position] as Gank)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH {
-        val view = LayoutInflater.from(parent?.context).inflate(
-                if (viewType == TYPE_NORMAL) R.layout.weekly_item else R.layout.load_more_footer_view, parent, false)
-        if (viewType == TYPE_FOOTER) {
-            view.findViewById<View>(R.id.load_more_loading_view).visibility = View.VISIBLE
-            view.findViewById<View>(R.id.load_more_failed_view).visibility = View.GONE
-            view.findViewById<View>(R.id.load_more_end_view).visibility = View.GONE
-            footerView = view
+        if (viewType == TYPE_NORMAL) {
+            val view = LayoutInflater.from(parent?.context).inflate(R.layout.weekly_item, parent, false)
+            return VH(view)
         }
-        return VH(view)
-    }
-
-    fun showError() {
-        val loadMoreFailedView = footerView.findViewById<View>(R.id.load_more_failed_view)
-        val loadMoreEndView = footerView.findViewById<View>(R.id.load_more_end_view)
-        loadMoreFailedView.visibility = View.VISIBLE
-        loadMoreEndView.visibility = View.GONE
-        footerView.findViewById<View>(R.id.load_more_loading_view).visibility = View.GONE
-        loadMoreFailedView.setOnClickListener { v -> onLoadMoreListener?.loadMore() }
-    }
-
-    fun showEnd() {
-        val loadMoreFailedView = footerView.findViewById<View>(R.id.load_more_failed_view)
-        val loadMoreEndView = footerView.findViewById<View>(R.id.load_more_end_view)
-        loadMoreFailedView.visibility = View.GONE
-        loadMoreEndView.visibility = View.VISIBLE
-        footerView.findViewById<View>(R.id.load_more_loading_view).visibility = View.GONE
+        if (viewType == TYPE_FOOTER) {
+            footerView.findViewById<View>(R.id.load_more_loading_view).visibility = View.VISIBLE
+            footerView.findViewById<View>(R.id.load_more_failed_view).visibility = View.GONE
+            footerView.findViewById<View>(R.id.load_more_end_view).visibility = View.GONE
+        }
+        return VH(footerView)
     }
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {

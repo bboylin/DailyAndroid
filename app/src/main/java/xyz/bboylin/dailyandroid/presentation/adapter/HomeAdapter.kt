@@ -33,7 +33,7 @@ import xyz.bboylin.universialtoast.UniversalToast
  * 首页的adapter,header是轮播图
  * Created by lin on 2018/2/7.
  */
-class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAdapter<HomeAdapter.VH>(items) {
+class HomeAdapter(context: Context?, items: ArrayList<Any>) : BaseAdapter<HomeAdapter.VH>(context, items) {
     private lateinit var headerView: BannerView<BannerItem>
     private val headerElem = Any()
     private val TYPE_HEADER = 3
@@ -51,21 +51,25 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.bindItem(context, items[position])
+        context?.let {
+            holder.bindItem(context as Context, items[position])
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH {
         if (viewType == TYPE_HEADER) {
             return VH(headerView)
         }
-        val view = LayoutInflater.from(parent?.context).inflate(
-                if (viewType == TYPE_NORMAL) R.layout.home_item else R.layout.load_more_footer_view, parent, false)
-        if (viewType == TYPE_FOOTER) {
-            view.findViewById<View>(R.id.load_more_loading_view).visibility = View.VISIBLE
-            view.findViewById<View>(R.id.load_more_failed_view).visibility = View.GONE
-            footerView = view
+        if (viewType == TYPE_NORMAL) {
+            val view = LayoutInflater.from(parent?.context).inflate(R.layout.home_item, parent, false)
+            return VH(view)
         }
-        return VH(view)
+        if (viewType == TYPE_FOOTER) {
+            footerView.findViewById<View>(R.id.load_more_loading_view).visibility = View.VISIBLE
+            footerView.findViewById<View>(R.id.load_more_failed_view).visibility = View.GONE
+            footerView.findViewById<View>(R.id.load_more_end_view).visibility = View.GONE
+        }
+        return VH(footerView)
     }
 
     override fun getItemViewType(position: Int): Int = when (position) {
@@ -87,13 +91,6 @@ class HomeAdapter(private val context: Context, items: ArrayList<Any>) : BaseAda
         items.add(headerElem)
         items.addAll(list)
         notifyDataSetChanged()
-    }
-
-    fun showError() {
-        val loadMoreFailedView = footerView.findViewById<View>(R.id.load_more_failed_view)
-        loadMoreFailedView.visibility = View.VISIBLE
-        loadMoreFailedView.setOnClickListener { v -> onLoadMoreListener?.loadMore() }
-        footerView.findViewById<View>(R.id.load_more_loading_view).visibility = View.GONE
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
