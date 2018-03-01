@@ -19,6 +19,7 @@ import kotlin.concurrent.thread
  * Created by lin on 2018/2/5.
  */
 class WeeklyFragment : BaseFragment() {
+    val TAG = WeeklyFragment::class.java.simpleName
     private var latestIssueId = -1
     private var page = 1
     private val list = ArrayList<Any>()
@@ -116,11 +117,5 @@ class WeeklyFragment : BaseFragment() {
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_weekly
-    }
-
-    companion object {
-        val TAG = "WeeklyFragment"
-        private val INSTANCE = WeeklyFragment()
-        fun getInstance(): WeeklyFragment = INSTANCE
     }
 }

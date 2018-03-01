@@ -30,7 +30,6 @@ class RxBus private constructor() {
     // 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者
     fun <T> toObservable(eventType: Class<T>): Observable<T> {
         //本质是先filter再cast
-        LogUtil.d("RxBus", "get event of type:" + eventType.canonicalName)
         return mBus.ofType(eventType)
     }
 

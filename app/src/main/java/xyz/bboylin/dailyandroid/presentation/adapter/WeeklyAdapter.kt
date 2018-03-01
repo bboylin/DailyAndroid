@@ -16,6 +16,8 @@ import xyz.bboylin.dailyandroid.domain.interator.UncollectOutsideInterator
 import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.RxBus
 import xyz.bboylin.dailyandroid.helper.rxevent.CollectionReadyEvent
+import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
+import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.universialtoast.UniversalToast
@@ -82,6 +84,10 @@ class WeeklyAdapter(context: Context?, private val len: Int, items: ArrayList<An
             itemView.collectBtn.setImageResource(
                     if (hasCollected) R.drawable.collect_success else R.drawable.collect_black)
             itemView.collectBtn.setOnClickListener { v ->
+                if (!AccountUtil.hasLogin()) {
+                    RxBus.get().post(LoginEvent())
+                    return@setOnClickListener
+                }
                 if (hasCollected) {
                     UncollectOutsideInterator(id).execute()
                             .subscribe({ response ->
@@ -114,9 +120,9 @@ class WeeklyAdapter(context: Context?, private val len: Int, items: ArrayList<An
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
-        super.onDetachedFromRecyclerView(recyclerView)
         CollectionUtil.saveCollections(collections)
         compositeDisposable.clear()
+        super.onDetachedFromRecyclerView(recyclerView)
     }
 
     companion object {

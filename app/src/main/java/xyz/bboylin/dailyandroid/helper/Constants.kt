@@ -15,4 +15,5 @@ object Constants {
     val HEADER_COOKIE = "Cookie"
     val SP_COOKIE_KEY = "cookie"
     val SP_COLLECTION_KEY = "COLLECTION"
+    val ABOUT_URL = "https://github.com/bboylin/DailyAndroid"
 }

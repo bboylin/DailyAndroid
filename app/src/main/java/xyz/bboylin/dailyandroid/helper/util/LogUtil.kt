@@ -18,4 +18,10 @@ object LogUtil {
             Log.e(tag, msg, th)
         }
     }
+
+    fun e(tag: String, msg: String) {
+        if (DEBUG) {
+            Log.e(tag, msg)
+        }
+    }
 }

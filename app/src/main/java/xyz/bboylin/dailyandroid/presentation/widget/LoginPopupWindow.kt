@@ -29,7 +29,11 @@ import xyz.bboylin.universialtoast.UniversalToast
  */
 object LoginPopupWindow {
     private val TAG = LoginPopupWindow.javaClass.simpleName
-    fun show(context: Activity, parent: View) {
+    fun show(context: Activity, parent: View?) {
+        if (parent == null) {
+            LogUtil.e(TAG, "parent must not be null")
+            return
+        }
         val view = LayoutInflater.from(context).inflate(R.layout.window_login, null)
         val popupWindow = PopupWindow(view, RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT)

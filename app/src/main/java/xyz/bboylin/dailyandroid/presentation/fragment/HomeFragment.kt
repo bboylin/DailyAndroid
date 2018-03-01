@@ -33,6 +33,7 @@ import xyz.bboylin.universialtoast.UniversalToast
 class HomeFragment : BaseFragment() {
     //注意，干货营的page从1开始，玩Android从0开始
     private var page = 0
+    public val TAG = HomeFragment::class.java.simpleName
 
     override fun initData() {
         if (NetworkUtil.networkConnected(activity as Context)) {
@@ -159,9 +160,4 @@ class HomeFragment : BaseFragment() {
         return R.layout.fragment_home
     }
 
-    companion object {
-        val TAG = "HomeFragment"
-        private val INSTANCE = HomeFragment()
-        fun getInstance(): HomeFragment = INSTANCE
-    }
 }

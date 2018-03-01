@@ -94,9 +94,9 @@ class HomeAdapter(context: Context?, items: ArrayList<Any>) : BaseAdapter<HomeAd
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
-        super.onDetachedFromRecyclerView(recyclerView)
         CollectionUtil.saveCollections(collections)
         compositeDisposable.clear()
+        super.onDetachedFromRecyclerView(recyclerView)
     }
 
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {

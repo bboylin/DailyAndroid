@@ -12,7 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
  */
 abstract class BaseFragment : Fragment() {
     protected val compositeDisposable = CompositeDisposable()
-    lateinit var contentView: View
+    var contentView: View? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         inflater?.let {
             contentView = inflater.inflate(getLayoutId(), container, false)
@@ -29,6 +29,11 @@ abstract class BaseFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        contentView = null
     }
 
     abstract fun getLayoutId(): Int

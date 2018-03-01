@@ -37,24 +37,24 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
         when (checkedId) {
             R.id.rb_home -> {
                 if (homeFragment == null) {
-                    homeFragment = HomeFragment.getInstance()
-                    transaction.add(R.id.fl_main, homeFragment, HomeFragment.TAG)
+                    homeFragment = HomeFragment()
+                    transaction.add(R.id.fl_main, homeFragment, (homeFragment as HomeFragment).TAG)
                 } else {
                     transaction.show(homeFragment)
                 }
             }
             R.id.rb_weekly -> {
                 if (weeklyFragment == null) {
-                    weeklyFragment = WeeklyFragment.getInstance()
-                    transaction.add(R.id.fl_main, weeklyFragment, WeeklyFragment.TAG)
+                    weeklyFragment = WeeklyFragment()
+                    transaction.add(R.id.fl_main, weeklyFragment, (weeklyFragment as WeeklyFragment).TAG)
                 } else {
                     transaction.show(weeklyFragment)
                 }
             }
             R.id.rb_me -> {
                 if (meFragment == null) {
-                    meFragment = MeFragment.getInstance()
-                    transaction.add(R.id.fl_main, meFragment, MeFragment.TAG)
+                    meFragment = MeFragment()
+                    transaction.add(R.id.fl_main, meFragment, (meFragment as MeFragment).TAG)
                 } else {
                     transaction.show(meFragment)
                 }
@@ -78,6 +78,7 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
     override fun initData() {
         if (AccountUtil.hasLogin()) {
             startService(Intent(this, CollectionService::class.java))
+            LogUtil.d("====", AccountUtil.hasLogin().toString())
         }
         val disposable = RxBus.get()
                 .toObservable()
@@ -117,6 +118,10 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
 
     override fun onBackPressed() {
         if (System.currentTimeMillis() - lastBackTime < 2000) {
+//            android.os.Process.killProcess(android.os.Process.myPid())
+            homeFragment = null
+            meFragment = null
+            weeklyFragment = null
             finish()
         } else {
             lastBackTime = System.currentTimeMillis()
