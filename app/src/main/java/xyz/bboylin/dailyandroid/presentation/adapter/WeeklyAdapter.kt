@@ -20,6 +20,7 @@ import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
+import xyz.bboylin.dailyandroid.helper.util.WebUtil
 import xyz.bboylin.universialtoast.UniversalToast
 
 /**
@@ -69,7 +70,7 @@ class WeeklyAdapter(context: Context?, private val len: Int, items: ArrayList<An
             itemView.bgImage.setImageURI(Uri.parse(gank.url))
             val url = Constants.WEEKLY_BASE_URL + Constants.WEEKLY_PATH_PREFIX + id + "/"
             itemView.bgImage.setOnClickListener { v ->
-                FinestWebView.Builder(context).titleDefault("Android技术周报#${id}").show(url)
+                WebUtil.show(url)
                 LogUtil.d(TAG, "load url:" + url)
             }
             var hasCollected = false

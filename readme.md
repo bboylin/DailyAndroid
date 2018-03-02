@@ -3,9 +3,8 @@
 
 to do list:
 
-[ ] cookie本地化加密
-[ ] 换肤
-[ ] post干货
-[ ] 图片本地化
-[ ] splash页（+权限申请）
-[ ] 版本更新
+- [ ] 换肤
+- [ ] post干货
+- [ ] Notification申请权限
+- [ ] 版本更新功能
+- [ ] 优化webView

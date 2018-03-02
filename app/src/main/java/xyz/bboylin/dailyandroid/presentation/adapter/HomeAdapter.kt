@@ -26,6 +26,7 @@ import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
+import xyz.bboylin.dailyandroid.helper.util.WebUtil
 import xyz.bboylin.dailyandroid.presentation.activity.CollectListActivity
 import xyz.bboylin.universialtoast.UniversalToast
 
@@ -150,7 +151,7 @@ class HomeAdapter(context: Context?, items: ArrayList<Any>) : BaseAdapter<HomeAd
                     }
                 }
                 itemView.title.setOnClickListener {
-                    FinestWebView.Builder(context).show(item.url)
+                    WebUtil.show(item.url)
                 }
             } else if (item is WanHomeItem) {
                 itemView.title.text = item.title

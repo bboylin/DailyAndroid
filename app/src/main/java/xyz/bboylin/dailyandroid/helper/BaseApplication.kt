@@ -3,7 +3,7 @@ package xyz.bboylin.dailyandroid.helper
 import android.app.Application
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.squareup.leakcanary.LeakCanary
-import xyz.bboylin.dailyandroid.helper.util.SpUtil
+import xyz.bboylin.dailyandroid.helper.util.ApplicationCtxUtil
 
 /**
  * Created by lin on 2018/2/11.
@@ -18,6 +18,6 @@ class BaseApplication : Application() {
         }
         LeakCanary.install(this)
         Fresco.initialize(this)
-        SpUtil.initContext(applicationContext)
+        ApplicationCtxUtil.initContext(applicationContext)
     }
 }

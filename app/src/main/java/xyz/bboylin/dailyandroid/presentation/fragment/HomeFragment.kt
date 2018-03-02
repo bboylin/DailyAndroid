@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import com.facebook.drawee.view.SimpleDraweeView
-import com.thefinestartist.finestwebview.FinestWebView
 import ezy.ui.view.BannerView
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -22,6 +21,7 @@ import xyz.bboylin.dailyandroid.domain.interator.GetBannerInterator
 import xyz.bboylin.dailyandroid.domain.interator.WanHomeInterator
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.helper.util.NetworkUtil
+import xyz.bboylin.dailyandroid.helper.util.WebUtil
 import xyz.bboylin.dailyandroid.presentation.OnLoadMoreListener
 import xyz.bboylin.dailyandroid.presentation.adapter.HomeAdapter
 import xyz.bboylin.dailyandroid.presentation.widget.SimpleItemDecoration
@@ -74,7 +74,7 @@ class HomeFragment : BaseFragment() {
                             item?.let {
                                 draweeView.setImageURI(Uri.parse(item.imagePath))
                                 draweeView.setOnClickListener { v ->
-                                    FinestWebView.Builder(activity).show(item.url)
+                                    WebUtil.show(item.url)
                                 }
                             }
                             return draweeView

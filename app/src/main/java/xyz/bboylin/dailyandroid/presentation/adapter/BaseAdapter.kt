@@ -80,11 +80,12 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var context: 
     }
 
     fun addData(list: List<Any>) {
+        LogUtil.d("BaseAdapter", "add data")
+        loading = false
         if (items.remove(footerElem)) {
             notifyItemRemoved(itemCount)
         }
         items.addAll(list)
-        loading = false
         notifyItemRangeInserted(itemCount - list.size, list.size)
     }
 

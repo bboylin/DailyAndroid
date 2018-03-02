@@ -8,8 +8,10 @@ import kotlinx.android.synthetic.main.fragment_me.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginSuccessEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
+import xyz.bboylin.dailyandroid.helper.util.WebUtil
 import xyz.bboylin.dailyandroid.presentation.activity.CollectListActivity
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
 import xyz.bboylin.universialtoast.UniversalToast
@@ -31,17 +33,21 @@ class MeFragment : BaseFragment() {
         tv_clean_cache.setOnClickListener(EmptyListener("清空缓存"))
         tv_change_skin.setOnClickListener(EmptyListener("夜间模式"))
         tv_about.setOnClickListener { v ->
-            FinestWebView.Builder(activity).show(Constants.ABOUT_URL)
+            WebUtil.show(Constants.ABOUT_URL)
         }
         tv_feedback.setOnClickListener { v ->
             UniversalToast.makeText(activity, "欢迎提issue"
                     , UniversalToast.LENGTH_SHORT, UniversalToast.CLICKABLE)
-                    .setClickCallBack("前往", { v -> FinestWebView.Builder(activity).show(Constants.ABOUT_URL) })
+                    .setClickCallBack("前往", { v -> WebUtil.show(Constants.ABOUT_URL) })
                     .show()
         }
         val onClickListener = { v: View? -> LoginPopupWindow.show(activity, contentView) }
         registerTv.setOnClickListener(onClickListener)
         collectionTv.setOnClickListener {
+            if (!AccountUtil.hasLogin()) {
+                RxBus.get().post(LoginEvent())
+                return@setOnClickListener
+            }
             CollectListActivity.startFrom(activity)
         }
         if (!TextUtils.isEmpty(userName)) {

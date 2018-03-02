@@ -16,4 +16,7 @@ object Constants {
     val SP_COOKIE_KEY = "cookie"
     val SP_COLLECTION_KEY = "COLLECTION"
     val ABOUT_URL = "https://github.com/bboylin/DailyAndroid"
+    val MOBILE_UA = "Mozilla/5.0 (Linux; Android 7.1.1; MI 6 Build/NMF26X)" +
+            " AppleWebKit/537.36 (KHTML, like Gecko) " +
+            "Chrome/60.0.3112.78 Mobile Safari/537.36\n"
 }
