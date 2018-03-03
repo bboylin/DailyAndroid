@@ -31,7 +31,7 @@ class PostGankActivity : BaseActivity() {
                         .showWarning()
                 return@setOnClickListener
             }
-            PostGankInterator(url, desc, who, "Android", true).execute()
+            PostGankInterator(url, desc, who).execute()
                     .subscribe({ response ->
                         if (!response.error) {
                             UniversalToast.makeText(this, "提交成功", UniversalToast.LENGTH_SHORT)

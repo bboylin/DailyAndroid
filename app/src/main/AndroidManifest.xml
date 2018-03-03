@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".helper.BaseApplication"
@@ -38,6 +40,13 @@
         <activity
             android:name=".presentation.activity.PostGankActivity"
             android:parentActivityName=".presentation.activity.MainActivity" />
+        <activity
+            android:name=".presentation.activity.RequestPermissionActivity"
+            android:enabled="false"
+            android:excludeFromRecents="true"
+            android:process=":dailyandroid"
+            android:taskAffinity="xyz.bboylin.dailyandroid.${applicationId}"
+            android:theme="@style/activity_Theme.Transparent" />
 
         <service
             android:name=".presentation.service.CollectionService"

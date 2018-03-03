@@ -59,7 +59,6 @@ abstract class BaseAdapter<T : RecyclerView.ViewHolder?>(protected var context: 
 
     private fun getLastVisibleItemPosition(layoutManager: RecyclerView.LayoutManager?): Int {
         if (layoutManager is LinearLayoutManager) {
-            LogUtil.d("====", layoutManager.findLastVisibleItemPosition().toString())
             return layoutManager.findLastVisibleItemPosition()
         } else {
             return RecyclerView.NO_POSITION
