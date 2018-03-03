@@ -13,7 +13,7 @@ import java.lang.StringBuilder
  */
 object RetrofitFactory {
     val GANK_SERVICE = Retrofit.Builder()
-            .baseUrl(Constants.GANK_BASE_URL)
+            .baseUrl(Constants.GANK_HTTP_BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -25,6 +25,14 @@ object RetrofitFactory {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WanAndroidService::class.java)
+    val GANK_POST_SERVICE by lazy {
+        Retrofit.Builder()
+                .baseUrl(Constants.GANK_HTTPS_BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(GankService::class.java)
+    }
 
     private fun getClient(): OkHttpClient {
         val builder = OkHttpClient().newBuilder().apply {

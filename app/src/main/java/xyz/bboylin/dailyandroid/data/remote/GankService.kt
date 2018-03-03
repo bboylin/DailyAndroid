@@ -1,9 +1,9 @@
 package xyz.bboylin.dailyandroid.data.remote
 
 import io.reactivex.Observable
-import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.*
 import xyz.bboylin.dailyandroid.data.entity.GankCategoryResponse
+import xyz.bboylin.dailyandroid.data.entity.PostGankResponse
 
 /**
  * Created by lin on 2018/2/6.
@@ -18,4 +18,10 @@ interface GankService {
      */
     @GET("data/{category}/{num}/{page}")
     fun getAndroidData(@Path("category") category: String, @Path("num") num: Int, @Path("page") page: Int): Observable<GankCategoryResponse>
+
+    @POST("add2gank")
+    @FormUrlEncoded
+    fun postGank(@Field("url") url: String, @Field("desc") desc: String
+                 , @Field("who") who: String, @Field("type") type: String
+                 , @Field("debug") debug: Boolean): Observable<PostGankResponse>
 }

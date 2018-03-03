@@ -9,6 +9,11 @@ import xyz.bboylin.dailyandroid.domain.repository.IRepository
  * Created by lin on 2018/2/6.
  */
 class RepositoryImpl : IRepository {
+    override fun postGank(url: String, desc: String, who: String, type: String, debug: Boolean): Observable<PostGankResponse> {
+        val service = RetrofitFactory.GANK_POST_SERVICE
+        return service.postGank(url, desc, who, type, debug)
+    }
+
     override fun uncollectOutside(id: Int): Observable<BaseResponse> {
         val service = RetrofitFactory.WAN_ANDROID_RETROFIT
         return service.uncollectOutside(id)

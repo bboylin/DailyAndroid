@@ -35,6 +35,9 @@
         <activity
             android:name=".presentation.activity.CollectListActivity"
             android:parentActivityName=".presentation.activity.MainActivity" />
+        <activity
+            android:name=".presentation.activity.PostGankActivity"
+            android:parentActivityName=".presentation.activity.MainActivity" />
 
         <service
             android:name=".presentation.service.CollectionService"

@@ -7,6 +7,7 @@ import xyz.bboylin.dailyandroid.data.entity.*
  * Created by lin on 2018/2/6.
  */
 interface IRepository {
+    fun postGank(url: String, desc: String, who: String, type: String, debug: Boolean): Observable<PostGankResponse>
     fun getGankByPage(page: Int): Observable<GankCategoryResponse>
     fun getWelfareByPage(page: Int): Observable<GankCategoryResponse>
     fun getWanByPage(page: Int): Observable<WanHomeResponse>

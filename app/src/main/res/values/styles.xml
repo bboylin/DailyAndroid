@@ -15,6 +15,16 @@
         <item name="color">@android:color/white</item>
     </style>
 
+    <style name="AppTheme.TextHint" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/grey_bg</item>
+        <item name="android:textColor">@color/grey_bg</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/grey_bg</item>
+        <item name="colorControlNormal">@color/grey_bg</item>
+        <item name="colorControlActivated">@color/grey_bg</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

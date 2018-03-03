@@ -5,7 +5,8 @@ package xyz.bboylin.dailyandroid.helper
  */
 object Constants {
     val WAN_ANDROID_BASE_URL = "http://www.wanandroid.com/"
-    val GANK_BASE_URL = "http://gank.io/api/"
+    val GANK_HTTP_BASE_URL = "http://gank.io/api/"
+    val GANK_HTTPS_BASE_URL = "https://gank.io/api/"
     val WEEKLY_BASE_URL = "https://www.androidweekly.cn/"
     val WEEKLY_PATH_PREFIX = "android-dev-weekly-issue-"
     val WEEKLY_TITLE_PREFIX = "Android开发技术周报 ISSUE"

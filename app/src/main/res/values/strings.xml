@@ -4,6 +4,7 @@
     <string name="weekly">周报</string>
     <string name="me">我的</string>
     <string name="collection">收藏列表</string>
+    <string name="post_gank">提交干货</string>
     <string name="empty_view_hint">暂无数据</string>
     <string name="error_view_hint">加载失败</string>
     <string name="no_network_view_hint">网络异常</string>

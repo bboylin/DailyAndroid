@@ -3,7 +3,6 @@ package xyz.bboylin.dailyandroid.presentation.fragment
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
-import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.fragment_me.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.Constants
@@ -13,6 +12,7 @@ import xyz.bboylin.dailyandroid.helper.rxevent.LoginSuccessEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.WebUtil
 import xyz.bboylin.dailyandroid.presentation.activity.CollectListActivity
+import xyz.bboylin.dailyandroid.presentation.activity.PostGankActivity
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
 import xyz.bboylin.universialtoast.UniversalToast
 
@@ -29,12 +29,10 @@ class MeFragment : BaseFragment() {
     override fun initView() {
         subscribeLoginEvent()
         tv_history.setOnClickListener(EmptyListener("历史"))
-        tv_post.setOnClickListener(EmptyListener("提交干货"))
         tv_clean_cache.setOnClickListener(EmptyListener("清空缓存"))
         tv_change_skin.setOnClickListener(EmptyListener("夜间模式"))
-        tv_about.setOnClickListener { v ->
-            WebUtil.show(Constants.ABOUT_URL)
-        }
+        tv_post.setOnClickListener { v -> PostGankActivity.startFrom(activity) }
+        tv_about.setOnClickListener { v -> WebUtil.show(Constants.ABOUT_URL) }
         tv_feedback.setOnClickListener { v ->
             UniversalToast.makeText(activity, "欢迎提issue"
                     , UniversalToast.LENGTH_SHORT, UniversalToast.CLICKABLE)

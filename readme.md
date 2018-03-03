@@ -4,7 +4,6 @@
 to do list:
 
 - [ ] 换肤
-- [ ] post干货
 - [ ] Notification申请权限
 - [ ] 版本更新功能
 - [ ] 优化webView
