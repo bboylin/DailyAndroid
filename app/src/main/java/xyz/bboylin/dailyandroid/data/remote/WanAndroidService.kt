@@ -78,12 +78,12 @@ interface WanAndroidService {
                        , @Field("link") link: String): Observable<CollectOutsideResponse>
 
     /**
-     * 取消站外收藏
+     * 取消收藏（收藏列表页触发，包括站外文章）
      * @param id
      * @return
      */
     @POST("lg/uncollect/{id}/json")
     @FormUrlEncoded
     fun uncollectOutside(@Path("id") id: Int
-                         , @Field("originId") originId: Int = -1): Observable<BaseResponse>
+                         , @Field("originId") originId: Int): Observable<BaseResponse>
 }

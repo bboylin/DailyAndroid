@@ -7,8 +7,8 @@ import xyz.bboylin.dailyandroid.domain.Usecase
 /**
  * Created by lin on 2018/2/20.
  */
-class UncollectOutsideInterator(val id: Int) : Usecase<BaseResponse>() {
+class UncollectOutsideInterator(val id: Int, val originId: Int = -1) : Usecase<BaseResponse>() {
     override fun execute(): Observable<BaseResponse> {
-        return repository.uncollectOutside(id).compose(applySchedulers())
+        return repository.uncollectOutside(id, originId).compose(applySchedulers())
     }
 }

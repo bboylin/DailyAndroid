@@ -8,10 +8,14 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.home_item.view.*
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.data.entity.CollectItem
-import xyz.bboylin.dailyandroid.domain.interator.UncollectInterator
+import xyz.bboylin.dailyandroid.domain.interator.UncollectOutsideInterator
+import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.RxBus
+import xyz.bboylin.dailyandroid.helper.rxevent.HomeItemUncollectedEvent
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
+import xyz.bboylin.dailyandroid.helper.rxevent.WeeklyItemUncollectedEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
+import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.helper.util.WebUtil
 import xyz.bboylin.universialtoast.UniversalToast
@@ -44,11 +48,18 @@ class CollectionAdapter(private val items: ArrayList<Any>) : RecyclerView.Adapte
             itemView.btn_star.setImageResource(R.drawable.collect_success)
             itemView.btn_star.setOnClickListener { v ->
                 if (AccountUtil.hasLogin()) {
-//                    UncollectOutsideInterator(item.id).execute()
-                    UncollectInterator(item.id).execute()
+                    UncollectOutsideInterator(item.id, item.originId).execute()
                             .subscribe({ response ->
                                 if (response.errorCode == 0) {
                                     adapter.removeItemAt(position)
+                                    if (item.originId == -1) {
+                                        CollectionUtil.removeSingleCollection("${item.link}$#$${item.id}")
+                                    }
+                                    if (item.link.startsWith(Constants.WEEKLY_BASE_URL)) {
+                                        RxBus.get().post(WeeklyItemUncollectedEvent(item.link, item.id))
+                                    } else {
+                                        RxBus.get().post(HomeItemUncollectedEvent(item))
+                                    }
                                 } else {
                                     UniversalToast.makeText(itemView.context, "取消收藏失败"
                                             , UniversalToast.LENGTH_SHORT)

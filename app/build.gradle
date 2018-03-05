@@ -47,12 +47,12 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.2'
     //image loader
     implementation 'com.facebook.fresco:fresco:1.8.1'
-    implementation 'com.facebook.fresco:animated-gif:1.8.1'
+//    implementation 'com.facebook.fresco:animated-gif:1.8.1'
     //banner
     implementation 'com.github.czy1121:bannerview:1.0.2'
     //webview
     implementation 'com.thefinestartist:finestwebview:1.2.7'
     //memory leak
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+//    releaseCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
 }

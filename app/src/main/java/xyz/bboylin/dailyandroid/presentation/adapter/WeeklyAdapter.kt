@@ -3,10 +3,10 @@ package xyz.bboylin.dailyandroid.presentation.adapter
 import android.content.Context
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.thefinestartist.finestwebview.FinestWebView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.weekly_item.view.*
 import xyz.bboylin.dailyandroid.R
@@ -17,10 +17,12 @@ import xyz.bboylin.dailyandroid.helper.Constants
 import xyz.bboylin.dailyandroid.helper.RxBus
 import xyz.bboylin.dailyandroid.helper.rxevent.CollectionReadyEvent
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
+import xyz.bboylin.dailyandroid.helper.rxevent.WeeklyItemUncollectedEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.helper.util.WebUtil
+import xyz.bboylin.dailyandroid.presentation.activity.CollectListActivity
 import xyz.bboylin.universialtoast.UniversalToast
 
 /**
@@ -32,13 +34,20 @@ class WeeklyAdapter(context: Context?, private val len: Int, items: ArrayList<An
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
         super.onAttachedToRecyclerView(recyclerView)
-        val disposable = RxBus.get()
+        val disposable = arrayOf(RxBus.get()
                 .toObservable(CollectionReadyEvent::class.java)
                 .subscribe({ t ->
                     collections = CollectionUtil.getCollection()
                     notifyDataSetChanged()
-                })
-        compositeDisposable.add(disposable)
+                }, { t -> LogUtil.e(TAG, "error", t) })
+                , RxBus.get()
+                .toObservable(WeeklyItemUncollectedEvent::class.java)
+                .subscribe({ item ->
+                    collections.remove("${item.url}$#$${item.id}")
+                    notifyDataSetChanged()
+                }, { t -> LogUtil.e(TAG, "error", t) }))
+        compositeDisposable.add(disposable[0])
+        compositeDisposable.add(disposable[1])
     }
 
     override fun onBindViewHolder(holder: VH?, position: Int) {
@@ -93,7 +102,9 @@ class WeeklyAdapter(context: Context?, private val len: Int, items: ArrayList<An
                     UncollectOutsideInterator(id).execute()
                             .subscribe({ response ->
                                 if (response.errorCode == 0) {
-                                    UniversalToast.makeText(context, "取消收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
+                                    UniversalToast.makeText(context, "取消收藏成功", UniversalToast.LENGTH_SHORT)
+                                            .setGravity(Gravity.CENTER, 0, 0)
+                                            .showSuccess()
                                     collections.remove(url + "$#$" + id)
                                     itemView.collectBtn.setImageResource(R.drawable.collect_black)
                                     hasCollected = false
@@ -101,27 +112,39 @@ class WeeklyAdapter(context: Context?, private val len: Int, items: ArrayList<An
                                 }
                             }, { throwable ->
                                 LogUtil.e(TAG, "取消收藏失败", throwable)
-                                UniversalToast.makeText(context, "取消收藏失败", UniversalToast.LENGTH_SHORT).showError()
+                                UniversalToast.makeText(context, "取消收藏失败", UniversalToast.LENGTH_SHORT)
+                                        .setGravity(Gravity.CENTER, 0, 0)
+                                        .showError()
                             })
                 } else {
                     CollectOutsideInterator(title, "脉脉不得语", url).execute()
                             .subscribe({ response ->
                                 collections.add(response.data.link + "$#$" + response.data.id)
-                                UniversalToast.makeText(context, "收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
+                                UniversalToast.makeText(context, "收藏成功"
+                                        , UniversalToast.LENGTH_SHORT, UniversalToast.CLICKABLE)
+                                        .setClickCallBack("查看", { v ->
+                                            CollectListActivity.startFrom(context)
+                                        })
+                                        .showSuccess()
                                 itemView.collectBtn.setImageResource(R.drawable.collect_success)
                                 hasCollected = true
                                 id = response.data.id
                             }, { throwable ->
                                 LogUtil.e(TAG, "收藏失败", throwable)
-                                UniversalToast.makeText(context, "收藏失败", UniversalToast.LENGTH_SHORT).showError()
+                                UniversalToast.makeText(context, "收藏失败"
+                                        , UniversalToast.LENGTH_SHORT, UniversalToast.CLICKABLE)
+                                        .setClickCallBack("查看", { v ->
+                                            CollectListActivity.startFrom(context)
+                                        })
+                                        .showError()
                             })
                 }
             }
         }
     }
 
+
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
-        CollectionUtil.saveCollections(collections)
         compositeDisposable.clear()
         super.onDetachedFromRecyclerView(recyclerView)
     }

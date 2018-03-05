@@ -5,8 +5,8 @@
     <string name="me">我的</string>
     <string name="collection">收藏列表</string>
     <string name="post_gank">提交干货</string>
-    <string name="permission_notification_title">允许权限以获取更好的体验</string>
-    <string name="permission_notification_text">点击以允许 %s 的权限</string>
+    <string name="permission_notification_title">DailyAndroid申请权限</string>
+    <string name="permission_notification_text">点击以允许 %s 权限</string>
     <string name="permission_notification_channel">dailyAndroid</string>
     <string name="permission_not_granted">为了更好的体验，请允许必要的权限</string>
 

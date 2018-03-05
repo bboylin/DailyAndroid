@@ -3,6 +3,7 @@ package xyz.bboylin.dailyandroid.presentation.adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import xyz.bboylin.dailyandroid.domain.interator.UncollectInterator
 import xyz.bboylin.dailyandroid.domain.interator.UncollectOutsideInterator
 import xyz.bboylin.dailyandroid.helper.RxBus
 import xyz.bboylin.dailyandroid.helper.rxevent.CollectionReadyEvent
+import xyz.bboylin.dailyandroid.helper.rxevent.HomeItemUncollectedEvent
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
 import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
@@ -42,13 +44,37 @@ class HomeAdapter(context: Context?, items: ArrayList<Any>) : BaseAdapter<HomeAd
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
         super.onAttachedToRecyclerView(recyclerView)
-        val disposable = RxBus.get()
+        val disposable = arrayOf(RxBus.get()
                 .toObservable(CollectionReadyEvent::class.java)
                 .subscribe({ t ->
                     collections = CollectionUtil.getCollection()
                     notifyDataSetChanged()
-                })
-        compositeDisposable.add(disposable)
+                }, { t -> LogUtil.e(TAG, "error", t) })
+                , RxBus.get()
+                .toObservable(HomeItemUncollectedEvent::class.java)
+                .subscribe({ event ->
+                    val originId = event.item.originId
+                    if (originId > 0) {
+                        items.forEach {
+                            if (it is WanHomeItem) {
+                                if (it.link.equals(event.item.link)) {
+                                    it.collect = false
+                                }
+                            }
+                        }
+                    } else {
+                        items.forEach {
+                            if (it is Gank) {
+                                if (it.url.equals(event.item.link)) {
+                                    collections.remove("${event.item.link}$#$${event.item.id}")
+                                }
+                            }
+                        }
+                    }
+                    notifyDataSetChanged()
+                }, { t -> LogUtil.e(TAG, "error", t) }))
+        compositeDisposable.add(disposable[0])
+        compositeDisposable.add(disposable[1])
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
@@ -95,7 +121,6 @@ class HomeAdapter(context: Context?, items: ArrayList<Any>) : BaseAdapter<HomeAd
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
-        CollectionUtil.saveCollections(collections)
         compositeDisposable.clear()
         super.onDetachedFromRecyclerView(recyclerView)
     }
@@ -122,7 +147,9 @@ class HomeAdapter(context: Context?, items: ArrayList<Any>) : BaseAdapter<HomeAd
                         UncollectOutsideInterator(id).execute()
                                 .subscribe({ response ->
                                     if (response.errorCode == 0) {
-                                        UniversalToast.makeText(context, "取消收藏成功", UniversalToast.LENGTH_SHORT).showSuccess()
+                                        UniversalToast.makeText(context, "取消收藏成功", UniversalToast.LENGTH_SHORT)
+                                                .setGravity(Gravity.CENTER, 0, 0)
+                                                .showSuccess()
                                         collections.remove(item.url + "$#$" + id)
                                         itemView.btn_star.setImageResource(R.drawable.collect_black)
                                         hasCollected = false
@@ -130,7 +157,9 @@ class HomeAdapter(context: Context?, items: ArrayList<Any>) : BaseAdapter<HomeAd
                                     }
                                 }, { throwable ->
                                     LogUtil.e(TAG, "取消收藏失败", throwable)
-                                    UniversalToast.makeText(context, "取消收藏失败", UniversalToast.LENGTH_SHORT).showError()
+                                    UniversalToast.makeText(context, "取消收藏失败", UniversalToast.LENGTH_SHORT)
+                                            .setGravity(Gravity.CENTER, 0, 0)
+                                            .showError()
                                 })
                     } else {
                         CollectOutsideInterator(item.desc, itemView.author.text.toString(), item.url).execute()
@@ -146,7 +175,9 @@ class HomeAdapter(context: Context?, items: ArrayList<Any>) : BaseAdapter<HomeAd
                                     id = response.data.id
                                 }, { throwable ->
                                     LogUtil.e(TAG, "收藏失败", throwable)
-                                    UniversalToast.makeText(context, "收藏失败", UniversalToast.LENGTH_SHORT).showError()
+                                    UniversalToast.makeText(context, "收藏失败", UniversalToast.LENGTH_SHORT)
+                                            .setGravity(Gravity.CENTER, 0, 0)
+                                            .showError()
                                 })
                     }
                 }

@@ -14,9 +14,9 @@ class RepositoryImpl : IRepository {
         return service.postGank(url, desc, who, type, debug)
     }
 
-    override fun uncollectOutside(id: Int): Observable<BaseResponse> {
+    override fun uncollectOutside(id: Int, originId: Int): Observable<BaseResponse> {
         val service = RetrofitFactory.WAN_ANDROID_RETROFIT
-        return service.uncollectOutside(id)
+        return service.uncollectOutside(id, originId)
     }
 
     override fun collectOutside(title: String, author: String, link: String): Observable<CollectOutsideResponse> {

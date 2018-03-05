@@ -4,11 +4,12 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.content.pm.PackageManager.*
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.M
@@ -17,8 +18,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
-import com.squareup.leakcanary.internal.LeakCanaryInternals.setEnabledBlocking
-import com.squareup.leakcanary.internal.RequestStoragePermissionActivity
 import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.universialtoast.UniversalToast
 
@@ -30,18 +29,27 @@ import xyz.bboylin.universialtoast.UniversalToast
  */
 @TargetApi(M)
 class RequestPermissionActivity : AppCompatActivity() {
+    private val REQUEST_CODE = 123
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
+            if (Build.VERSION.SDK_INT >= O && !Settings.canDrawOverlays(this)) {
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + packageName))
+                startActivityForResult(intent, REQUEST_CODE)
+            }
             if (!hasStoragePermission()) {
                 val permissions = arrayOf(WRITE_EXTERNAL_STORAGE)
-                requestPermissions(permissions, 123)
+                requestPermissions(permissions, REQUEST_CODE)
             }
-            if (Build.VERSION.SDK_INT >= O && !Settings.canDrawOverlays(this)) {
-                UniversalToast.makeText(this, "请允许悬浮窗权限", UniversalToast.LENGTH_SHORT).show()
-                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + packageName))
-                startActivity(intent)
-            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (Build.VERSION.SDK_INT >= O && requestCode == REQUEST_CODE) {
+            val text = if (Settings.canDrawOverlays(this)) "已获取悬浮窗权限" else "请打开悬浮窗权限"
+            UniversalToast.makeText(this, text, UniversalToast.LENGTH_SHORT)
+                    .setGravity(Gravity.CENTER, 0, 0)
+                    .show()
             finish()
         }
     }
@@ -68,10 +76,18 @@ class RequestPermissionActivity : AppCompatActivity() {
 
     companion object {
         fun createPendingIntent(context: Context): PendingIntent {
-            setEnabledBlocking(context, RequestStoragePermissionActivity::class.java, true)
-            val intent = Intent(context, RequestStoragePermissionActivity::class.java)
+            setEnabledBlocking(context, RequestPermissionActivity::class.java, true)
+            val intent = Intent(context, RequestPermissionActivity::class.java)
             intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TOP
             return PendingIntent.getActivity(context, 1, intent, FLAG_UPDATE_CURRENT)
+        }
+
+        private fun setEnabledBlocking(appContext: Context, componentClass: Class<*>, enabled: Boolean) {
+            val component = ComponentName(appContext, componentClass)
+            val packageManager = appContext.packageManager
+            val newState = if (enabled) COMPONENT_ENABLED_STATE_ENABLED else COMPONENT_ENABLED_STATE_DISABLED
+            // Blocks on IPC.
+            packageManager.setComponentEnabledSetting(component, newState, DONT_KILL_APP)
         }
     }
 }

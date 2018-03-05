@@ -81,7 +81,7 @@
         <item name="android:windowExitAnimation">@anim/window_out</item>
     </style>
 
-    <style name="activity_Theme.Transparent" parent="android:Theme">
+    <style name="activity_Theme.Transparent" parent="AppTheme.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>

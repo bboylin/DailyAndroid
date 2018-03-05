@@ -35,12 +35,13 @@ import xyz.bboylin.universialtoast.UniversalToast
 
 
 class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
-    private val NOTIFICATION_CHANNEL_ID = "dailyAndroid"
     private var homeFragment: HomeFragment? = null
     private var weeklyFragment: WeeklyFragment? = null
     private var meFragment: MeFragment? = null
     private var lastBackTime: Long = 0
     private var checkedId: Int = R.id.rb_home
+    private val NOTIFICATION_CHANNEL_ID = "dailyAndroid"
+    private var notiContent = ""
     private var notificationDiaplayed = false
     override fun onCheckedChanged(radioGroup: RadioGroup?, checkedId: Int) {
         switchFragment(checkedId)
@@ -123,16 +124,16 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
 
         val pendingIntent = RequestPermissionActivity.createPendingIntent(this)
         val contentTitle = getString(R.string.permission_notification_title)
-        val packageName = getPackageName()
-        val contentText = getString(R.string.permission_notification_text, packageName)
-        showNotification(contentTitle, contentText, pendingIntent, 0x1DDDDDDD)
+        val contentText = getString(R.string.permission_notification_text, notiContent)
+        showNotification(contentTitle, contentText, pendingIntent, 1001)
     }
 
     fun showNotification(contentTitle: CharSequence, contentText: CharSequence
                          , pendingIntent: PendingIntent, notificationId: Int) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val builder = Notification.Builder(this) //
-                .setSmallIcon(R.mipmap.ic_launcher)
+                // todo change icon
+                .setSmallIcon(android.R.drawable.stat_notify_chat)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
@@ -164,6 +165,18 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
             return true
         }
         val writeStoragePermissionGranted = checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED
+        //要申请的权限
+        if (!writeStoragePermissionGranted) {
+            if (Build.VERSION.SDK_INT >= O && !Settings.canDrawOverlays(this)) {
+                notiContent = "存储和悬浮窗"
+            } else {
+                notiContent = "存储"
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= O && !Settings.canDrawOverlays(this)) {
+                notiContent = "悬浮窗"
+            }
+        }
         if (!writeStoragePermissionGranted) {
             return false
         }
