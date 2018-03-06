@@ -3,7 +3,7 @@
 
 ### [戳我下载](https://github.com/bboylin/DailyAndroid/releases/download/v1.0.0/daily-android-1.0.0.apk)
 
-![](./art/1.png)![](./art/2.png)![](./art/3.png)![](./art/4.png)
+![](./art/1.png)![](./art/2.png)![](./art/3.png)![](./art/4.png)![](./art/5.png)
 
 项目基于kotlin编写，架构分presentation,data,domain三层。引用了以下第三方框架或者控件：
 * [retrofit](https://github.com/square/retrofit)
