@@ -109,6 +109,14 @@
         android:textSize="14sp" />
 
     <TextView
+        android:id="@+id/tv_update"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center|center_horizontal"
+        android:text="版本更新"
+        android:textSize="14sp" />
+
+    <TextView
         android:id="@+id/tv_feedback"
         android:layout_width="match_parent"
         android:layout_height="50dp"

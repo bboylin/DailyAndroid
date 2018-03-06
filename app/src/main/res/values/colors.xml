@@ -13,4 +13,6 @@
     <color name="colorPopup">#ededed</color>
     <color name="imageColorPlaceholder">#ededed</color>
     <color name="grey_bg">#3f180f0f</color>
+    <color name="text_blue">#0076FF</color>
+    <color name="text_black">#333333</color>
 </resources>

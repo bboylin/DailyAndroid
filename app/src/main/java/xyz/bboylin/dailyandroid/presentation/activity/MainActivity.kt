@@ -23,14 +23,18 @@ import xyz.bboylin.dailyandroid.R
 import xyz.bboylin.dailyandroid.helper.RxBus
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginSuccessEvent
+import xyz.bboylin.dailyandroid.helper.rxevent.UpdateEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
+import xyz.bboylin.dailyandroid.helper.util.CollectionUtil
 import xyz.bboylin.dailyandroid.helper.util.LogUtil
 import xyz.bboylin.dailyandroid.presentation.fragment.BaseFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.HomeFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.MeFragment
 import xyz.bboylin.dailyandroid.presentation.fragment.WeeklyFragment
 import xyz.bboylin.dailyandroid.presentation.service.CollectionService
+import xyz.bboylin.dailyandroid.presentation.task.CheckUpdateTask
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
+import xyz.bboylin.dailyandroid.presentation.widget.UpdateDialog
 import xyz.bboylin.universialtoast.UniversalToast
 
 
@@ -93,8 +97,11 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
     }
 
     override fun initData() {
+        CheckUpdateTask().execute()
         if (AccountUtil.hasLogin()) {
             startService(Intent(this, CollectionService::class.java))
+        } else {
+            CollectionUtil.saveCollections(HashSet<String>())
         }
         if (!allPermissionsGranted()) {
             requestPermissionNotification()
@@ -111,6 +118,11 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
                         if (AccountUtil.hasLogin()) {
                             startService(Intent(this, CollectionService::class.java))
                         }
+                    } else if (t is UpdateEvent) {
+                        val content = "发现新版本：${t.versionName} 是否下载？\n\n" + t.content
+                        UpdateDialog(this).setContent(content)
+                                .setUrl(t.url)
+                                .show()
                     }
                 }, { t -> LogUtil.e("MainActivity", "error", t) })
         compositeDisposable.add(disposable)
@@ -132,8 +144,7 @@ class MainActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
                          , pendingIntent: PendingIntent, notificationId: Int) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val builder = Notification.Builder(this) //
-                // todo change icon
-                .setSmallIcon(android.R.drawable.stat_notify_chat)
+                .setSmallIcon(R.drawable.avatar)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)

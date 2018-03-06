@@ -10,5 +10,6 @@ object ApplicationCtxUtil {
         AccountUtil.initContext(context)
         CollectionUtil.initContext(context)
         WebUtil.initContext(context)
+        AppUtil.initContext(context)
     }
 }

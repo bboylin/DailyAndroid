@@ -10,9 +10,11 @@ import xyz.bboylin.dailyandroid.helper.RxBus
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginEvent
 import xyz.bboylin.dailyandroid.helper.rxevent.LoginSuccessEvent
 import xyz.bboylin.dailyandroid.helper.util.AccountUtil
+import xyz.bboylin.dailyandroid.helper.util.AppUtil
 import xyz.bboylin.dailyandroid.helper.util.WebUtil
 import xyz.bboylin.dailyandroid.presentation.activity.CollectListActivity
 import xyz.bboylin.dailyandroid.presentation.activity.PostGankActivity
+import xyz.bboylin.dailyandroid.presentation.task.CheckUpdateTask
 import xyz.bboylin.dailyandroid.presentation.widget.LoginPopupWindow
 import xyz.bboylin.universialtoast.UniversalToast
 
@@ -22,12 +24,27 @@ import xyz.bboylin.universialtoast.UniversalToast
 class MeFragment : BaseFragment() {
     val TAG = MeFragment::class.java.simpleName
     private lateinit var userName: String
+    private var lastClickTime = 0L
     override fun initData() {
         userName = AccountUtil.getUserName()
     }
 
     override fun initView() {
         subscribeLoginEvent()
+        tv_update.setOnClickListener { v ->
+            val curClickTime = System.currentTimeMillis()
+            if (curClickTime - lastClickTime < 2000) {
+                return@setOnClickListener
+            }
+            lastClickTime = curClickTime
+            if (AppUtil.getUpdateFlag()) {
+                CheckUpdateTask().execute()
+            } else {
+                UniversalToast.makeText(activity, "已经是最新版本啦", UniversalToast.LENGTH_SHORT)
+                        .setGravity(Gravity.CENTER, 0, 0)
+                        .showSuccess()
+            }
+        }
         tv_history.setOnClickListener(EmptyListener("历史"))
         tv_clean_cache.setOnClickListener(EmptyListener("清空缓存"))
         tv_change_skin.setOnClickListener(EmptyListener("夜间模式"))
