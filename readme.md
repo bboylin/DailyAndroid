@@ -5,7 +5,7 @@
 
 ![](./art/1.png)![](./art/2.png)![](./art/3.png)![](./art/4.png)![](./art/5.png)
 
-项目基于kotlin编写，架构分presentation,data,domain三层。引用了以下第三方框架或者控件：
+项目基于kotlin编写，master分支采用clean-Architecture架构，clean-mvp分支采用clean-mvp架构(可以看看主页的HomeFragment)。引用了以下第三方框架或者控件：
 * [retrofit](https://github.com/square/retrofit)
 * [RxJava+RxAndroid](https://github.com/ReactiveX/RxJava)
 * [fresco](https://github.com/facebook/fresco)
